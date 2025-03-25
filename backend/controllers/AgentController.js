@@ -2,12 +2,12 @@ import Agent from "../Models/Agent.js";
 
 export const createAgent = async (req, res) => {
     try {
-        const {  name, Email, mobileNo, address, lisenceNo, experience, commissionRate, status } = req.body;
-        if (!name|| !Email|| ! mobileNo|| ! address|| ! lisenceNo|| ! experience|| ! commissionRate|| ! status ) {
+        const {  name, email, mobileNo, address, licenseNo, experience, commissionRate, status } = req.body;
+        if (!name|| !email|| ! mobileNo|| ! address|| ! licenseNo|| ! experience|| ! commissionRate|| ! status ) {
             return res.status(400).json({ success: false, message: 'All fields are required!' });
         }
 
-        await Agent.create({ name, Email, mobileNo, address, lisenceNo, experience, commissionRate, status}) 
+        await Agent.create({ name, email, mobileNo, address, licenseNo, experience, commissionRate, status}) 
         res.status(201).json({
             message: 'Agent created successfully'
         });
@@ -41,7 +41,7 @@ export const getAgentById = async (req, res) => {
 
 export const updateAgent = async (req, res) => {
     try {
-        const { name, Email, mobileNo, address, lisenceNo, experience, commissionRate, status} = req.body;
+        const { name, email, mobileNo, address, lisenceNo, experience, commissionRate, status} = req.body;
         const AgentId = req.params.id; 
 
         const existingAgent = await Agent.findById(AgentId);
@@ -50,7 +50,7 @@ export const updateAgent = async (req, res) => {
         }
 
         const updateData = {
-            name, Email, mobileNo, address, lisenceNo, experience, commissionRate, status
+            name, email, mobileNo, address, lisenceNo, experience, commissionRate, status
         };
 
         const updatedAgent = await Agent.findByIdAndUpdate(

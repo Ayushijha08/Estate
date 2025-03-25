@@ -29,14 +29,14 @@ const AgentSchema = new Schema({
         unique: true, 
     },
     experience: {
-        type: Number,
+        type: String,
         required: true,
-        min: 0, 
+       
     },
     commissionRate: {
-        type: Number,
+        type: String,
         required: true,
-        min: 0, 
+        
     },
     status: {
         type: String,

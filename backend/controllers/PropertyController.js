@@ -9,16 +9,16 @@ export const createProperty = async (req, res) => {
 
         await Property.create({ propertyTitle, propertyType, address, price, areaSqft, furnishing, status}) 
         res.status(201).json({
-            message: 'property created successfully'
+            message: 'Property created successfully'
         });
     } catch (error) {
-        res.status(500).json({ error: 'Error saving the property', details: error.message });
+        res.status(500).json({ error: 'Error saving the Property', details: error.message });
     }
 };
 
 export const getAllProperties = async (req, res) => {
     try {
-        const properties = await property.find();
+        const properties = await Property.find();
         res.json(properties);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -28,12 +28,12 @@ export const getAllProperties = async (req, res) => {
 
 export const getPropertyById = async (req, res) => {
     try {
-        const propertyId = req.params.id;
-        const property = await property.findById(propertyId);
-        if (!property) {
-            return res.status(404).json({ message: 'property id not found' });
+        const PropertyId = req.params.id;
+        const Property = await Property.findById(PropertyId);
+        if (!Property) {
+            return res.status(404).json({ message: 'Property id not found' });
         }
-        res.json(property);
+        res.json(Property);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -42,9 +42,9 @@ export const getPropertyById = async (req, res) => {
 export const updateProperty = async (req, res) => {
     try {
         const { propertyTitle, propertyType, address, price, areaSqft, furnishing, status } = req.body;
-        const propertyId = req.params.id; 
+        const PropertyId = req.params.id; 
 
-        const existingProperty = await property.findById(propertyId);
+        const existingProperty = await Property.findById(PropertyId);
         if (!existingProperty) {
             return res.status(404).json({ message: 'Property not found' });
         }
@@ -53,29 +53,29 @@ export const updateProperty = async (req, res) => {
             propertyTitle, propertyType, address, price, areaSqft, furnishing, status
         };
 
-        const updatedProperty = await property.findByIdAndUpdate(
-            propertyId,
+        const updatedProperty = await Property.findByIdAndUpdate(
+            PropertyId,
             updateData,
             { new: true } 
         );
 
         res.json({
-            message: 'property updated successfully',
-            property: updatedProperty
+            message: 'Property updated successfully',
+            Property: updatedProperty
         });
     } catch (error) {
-        res.status(500).json({ error: 'Error updating the property', details: error.message });
+        res.status(500).json({ error: 'Error updating the Property', details: error.message });
     }
 };
 
 export const deleteProperty = async (req, res) => {
     try {
-        const propertyId = req.params.id; 
-        const deletedProperty = await property.findByIdAndDelete(propertyId); 
+        const PropertyId = req.params.id; 
+        const deletedProperty = await Property.findByIdAndDelete(PropertyId); 
         if (!deletedProperty) {
-            return res.status(404).json({ message: 'property not found' });
+            return res.status(404).json({ message: 'Property not found' });
         }
-        res.json({ message: 'property deleted successfully' });
+        res.json({ message: 'Property deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

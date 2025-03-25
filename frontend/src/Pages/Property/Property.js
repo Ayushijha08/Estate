@@ -26,6 +26,7 @@ const columns = [
 
 function createData(SI_no, propertyTitle, propertyType, address, price, areaSqft, furnishing, status) {
   return { SI_no, propertyTitle, propertyType, address, price, areaSqft, furnishing, status };
+  
 }
 
 const rows = [

@@ -18,7 +18,6 @@ const BookingSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        match: /^[0-9]{10}$/,
     },
     address: {
         type: String,

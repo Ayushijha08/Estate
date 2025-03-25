@@ -20,18 +20,17 @@ const LeaseSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            match: /^[0-9]{10}$/, // Ensures a 10-digit mobile number
         },
         address: {
             type: String,
             required: true,
         },
         LeaseStartDate: {
-            type: Date,
+            type: String,
             required: true,
         },
         LeaseEndDate: {
-            type: Date,
+            type: String,
             required: true,
         },
         MonthlyRent: {
@@ -45,12 +44,12 @@ const LeaseSchema = new Schema(
         paymentStatus: {
             type: String,
             enum: ['Paid', 'Unpaid', 'Partial'],
-            default: 'Unpaid',
+           // default: 'Unpaid',
         },
         LeaseStatus: {
             type: String,
             enum: ['Active', 'Expired', 'Terminated'],
-            default: 'Active',
+            //default: 'Active',
         },
     },
     { timestamps: true }

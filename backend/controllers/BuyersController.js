@@ -1,13 +1,14 @@
+//import Buyers from "../Models/Buyers.js";
 import Buyers from "../Models/Buyers.js"
 
 export const createBuyer = async (req, res) => {
     try {
-        const {  name, Email, mobileNo, address, RoomNo, status} = req.body;
-        if (name|| ! Email|| ! mobileNo|| ! address|| ! RoomNo|| ! status )   {
+        const {  name, email, mobileNo, address, RoomNo, status} = req.body;
+        if (!name|| !email|| !mobileNo|| !address|| !RoomNo|| !status )   {
             return res.status(400).json({ success: false, message: 'All fields are required!' });
         }
 
-        await Buyers.create({ name, Email, mobileNo, address, RoomNo, status}) 
+        await Buyers.create({ name, email, mobileNo, address, RoomNo, status}) 
         res.status(201).json({
             message: 'Buyer created successfully'
         });
@@ -18,8 +19,8 @@ export const createBuyer = async (req, res) => {
 
 export const getAllBuyers = async (req, res) => {
     try {
-        const Buyers = await Buyer.find();
-        res.json(Buyers);
+        const Buyer = await Buyers.find();
+        res.json(Buyer);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -33,7 +34,7 @@ export const getBuyerById = async (req, res) => {
         if (!Buyer) {
             return res.status(404).json({ message: 'Buyer id not found' });
         }
-        res.json(Buyer);
+        res.json(Buyers);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -41,19 +42,19 @@ export const getBuyerById = async (req, res) => {
 
 export const updateBuyer = async (req, res) => {
     try {
-        const {name, Email, mobileNo, address, RoomNo, status} = req.body;
+        const {name, email, mobileNo, address, RoomNo, status} = req.body;
         const BuyerId = req.params.id; 
 
-        const existingBuyer = await Buyer.findById(BuyerId);
+        const existingBuyer = await Buyers.findById(BuyerId);
         if (!existingBuyer) {
             return res.status(404).json({ message: 'Buyer not found' });
         }
 
         const updateData = {
-            name, Email, mobileNo, address, RoomNo, status
+            name, email, mobileNo, address, RoomNo, status
         };
 
-        const updatedBuyer = await Buyer.findByIdAndUpdate(
+        const updatedBuyer = await Buyers.findByIdAndUpdate(
             BuyerId,
             updateData,
             { new: true } 
@@ -71,7 +72,7 @@ export const updateBuyer = async (req, res) => {
 export const deleteBuyer = async (req, res) => {
     try {
         const BuyerId = req.params.id; 
-        const deletedBuyer = await Buyer.findByIdAndDelete(BuyerId); 
+        const deletedBuyer = await Buyers.findByIdAndDelete(BuyerId); 
         if (!deletedBuyer) {
             return res.status(404).json({ message: 'Buyer not found' });
         }

@@ -14,6 +14,10 @@ import financeRouter from "./routes/FinanceRoute.js";
 dotenv.config();
 const app =express();
 const PORT = process.env.PORT || 3001
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.json());
+
 
 app.use("/property",propertyRouter) //localhost:3001/property/createProduct
 app.use("/buyer",buyerRouter)

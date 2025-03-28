@@ -39,9 +39,9 @@ const rows = [
   createData('3', 'Jane Smith', 'janesmith@mail.com', 87654321, 'California', '12-02-25', '12-02-25', 1500000, 'pending', 'confirmed'),
   createData('4', 'Mark', 'mark@mail.com', 11223344, 'Texas', '13-02-25', '13-02-25', 1800000, 'paid', 'cancelled'),
   createData('5', 'Sarah', 'sarah@mail.com', 99887766, 'Florida', '14-02-25', '14-02-25', 1100000, 'pending', 'confirmed'),
-  createData('6', 'Alex', 'alex@mail.com', 66554433, 'Chicago', '15-02-25', '15-02-25', 2500000, 'paid', 'confirmed'),
-  createData('7', 'Emma', 'emma@mail.com', 44556677, 'Las Vegas', '16-02-25', '16-02-25', 3000000, 'pending', 'confirmed'),
-  createData('8', 'Michael', 'michael@mail.com', 33445566, 'Miami', '17-02-25', '17-02-25', 2200000, 'paid', 'confirmed'),
+ // createData('6', 'Alex', 'alex@mail.com', 66554433, 'Chicago', '15-02-25', '15-02-25', 2500000, 'paid', 'confirmed'),
+  //createData('7', 'Emma', 'emma@mail.com', 44556677, 'Las Vegas', '16-02-25', '16-02-25', 3000000, 'pending', 'confirmed'),
+  //createData('8', 'Michael', 'michael@mail.com', 33445566, 'Miami', '17-02-25', '17-02-25', 2200000, 'paid', 'confirmed'),
 ];
 
 export default function StickyHeadTable() {

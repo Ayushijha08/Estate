@@ -14,7 +14,7 @@ const LayoutFinance=()=>
             <Sidebar/>
             <div className="content">
             <Header className="header" />
-            <Search />
+            <Search buttonText="Add Finance" />
             <Finance />
             
 

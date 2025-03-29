@@ -69,7 +69,7 @@ const deleteModalStyle = {
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
     const [data, setData] = React.useState(rows); // Use this state to store and update rows data
-    const [Rows, setRows] = React.useState({});
+   // const [Rows, setRows] = React.useState({});
 
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [viewModalOpen, setViewModalOpen] = React.useState(false);
@@ -139,11 +139,9 @@ export default function StickyHeadTable() {
     handleCloseDeleteModal();
   };
   const handleDropdownChange = (columnId, value, SI_no) => {
-    const updatedRows = data.map((row) =>
-      row.SI_no === SI_no ? { ...row, [columnId]: value } : row
-    );
-    setData(updatedRows); // Update the state with the new value for the respective column
+    setData(data.map(row => row.SI_no === SI_no ? { ...row, [columnId]: value } : row));
   };
+  
 
   const renderViewModal = () => (
     <Modal
@@ -154,8 +152,10 @@ export default function StickyHeadTable() {
     >
       <Box sx={modalStyle}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography id="view-modal-title" variant="h6" component="h2">
-            sellers Details
+          <Typography id="view-modal-title" 
+          sx={{fontWeight:'500px'}}
+          variant="h6" component="h2">
+            Sellers Details
           </Typography>
           <IconButton onClick={handleCloseViewModal} size="small">
             <CloseIcon />
@@ -291,7 +291,9 @@ export default function StickyHeadTable() {
       aria-describedby="delete-modal-description"
     >
       <Box sx={deleteModalStyle}>
-        <Typography id="delete-modal-title" variant="h6" component="h2" gutterBottom>
+        <Typography id="delete-modal-title"
+                className='confirm_delete'
+                variant="h6" component="h2" gutterBottom>
           Confirm Delete
         </Typography>
         <Typography id="delete-modal-description" sx={{ mb: 3 }}>
@@ -310,9 +312,9 @@ export default function StickyHeadTable() {
   );
 
 
-  const handleStatusChange = (event, siNo) => {
-    setRows(rows.map(row => row.SI_no === siNo ? { ...row, Status: event.target.value } : row));
-  };
+  //const handleStatusChange = (event, siNo) => {
+    //setRows(rows.map(row => row.SI_no === siNo ? { ...row, Status: event.target.value } : row));
+  //};
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -337,7 +339,7 @@ export default function StickyHeadTable() {
                       {column.id === 'Status' ? (
                         <Select
                           value={value}
-                          onChange={(event) => handleStatusChange(event, row.SI_no)}
+                          onChange={(event) => handleDropdownChange(event, row.SI_no)}
                           size="small"
                         >
                           <MenuItem value="active">Active</MenuItem>
@@ -345,13 +347,19 @@ export default function StickyHeadTable() {
                         </Select>
                       )  : column.id === 'action' ? (
                         <div  style={{display:'flex'}}>
-                          <IconButton onClick={() => handleView(row)} color="black">
+                          <IconButton
+                          className='view'
+                           onClick={() => handleView(row)} color="black">
                             <VisibilityIcon />
                           </IconButton>
-                          <IconButton onClick={() => handleEdit(row)} color="black">
+                          <IconButton 
+                          className='edit'
+                          onClick={() => handleEdit(row)} color="black">
                             <EditIcon />
                           </IconButton>
-                          <IconButton onClick={() => handleDelete(row)} color="black">
+                          <IconButton 
+                          className='delete'
+                          onClick={() => handleDelete(row)} color="black">
                             <DeleteIcon />
                           </IconButton>
                         </div>

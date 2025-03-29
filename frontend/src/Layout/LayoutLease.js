@@ -14,7 +14,7 @@ const LayoutLease=()=>
             <Sidebar/>
             <div className="content">
             <Header className="header" />
-            <Search />
+            <Search buttonText="Add Lease" />
             <Lease/>
             
 

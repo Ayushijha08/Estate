@@ -158,6 +158,20 @@ body{
      display:flex; 
      position:absolute;
      }
-     .MuiIconButton-root{
-      color: rgb(23, 19, 19) !important;
+     .view{
+      color: blue !important;
+     }
+     .edit{
+      color:green !important;
+     }
+     .delete{
+      color:red !important;
+     }
+     .confirm_delete{
+      font-weight: 700 !important;
+     }
+     .logos{
+      background-color: aqua !important;
+      opacity:2px;
+      z-index: -1;
      }

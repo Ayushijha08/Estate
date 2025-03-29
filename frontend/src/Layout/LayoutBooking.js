@@ -14,7 +14,7 @@ const LayoutBooking=()=>
             <Sidebar/>
             <div className="content">
             <Header className="header" />
-            <Search />
+            <Search buttonText="Add Booking" />
             <Booking className="booking"/>
             
 

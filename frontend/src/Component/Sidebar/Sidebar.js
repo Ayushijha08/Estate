@@ -18,9 +18,10 @@ const Sidebar=()=>
            <LazyLoadImage 
               src={"/logo.png"} 
               alt="logo"
+              className="logos"
               width={250} 
               height={95} 
-                            //style={{ filter: "brightness(0) invert(1)" } }
+              style={{background:"black"}}
 
             />
 

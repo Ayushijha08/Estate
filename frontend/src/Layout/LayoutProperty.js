@@ -14,7 +14,7 @@ const LayoutProperty=()=>
             <Sidebar/>
             <div className="content">
             <Header className="header" />
-            <Search />
+            <Search  buttonText="Add Property"/>
         <Property/>
             
 

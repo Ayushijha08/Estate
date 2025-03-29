@@ -18,17 +18,17 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const columns = [
-  { id: 'SI_no', label: 'SI NO.', flex: 1,minWidth:50 },
-  { id: 'name', label: 'Name', flex: 1, align: 'right', minWidth: 100 },
-  { id: 'email', label: 'E-mail', flex: 1, align: 'right', minWidth: 150 },
-  { id: 'mobileNo', label: 'Mobile Number', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'address', label: 'Address', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'check_in_date', label: 'Check-in Date', flex: 1, align: 'right', minWidth: 150 },
-  { id: 'check_out_date', label: 'Check-out Date', flex: 1, align: 'right', minWidth: 150 },
-  { id: 'TotalAmountUnit', label: 'Total Amount Unit', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'paymentStatus', label: 'Payment Status', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'Bookingstatus', label: 'Booking Status', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'action', label: 'Action', flex: 1, align: 'center', minWidth: 200 },
+  { id: 'SI_no', label: 'SI NO.', minWidth: 120 },
+  { id: 'name', label: 'Name', minWidth: 220 },
+  { id: 'email', label: 'E-mail', minWidth: 280 },
+  { id: 'mobileNo', label: 'Mobile Number', minWidth: 280 },
+  { id: 'address', label: 'Address', minWidth: 320 },
+  { id: 'check_in_date', label: 'Check-in Date', minWidth: 330 },
+  { id: 'check_out_date', label: 'Check-out Date', minWidth: 220 },
+  { id: 'TotalAmountUnit', label: 'Total Amount Unit', minWidth: 270 },
+  { id: 'paymentStatus', label: 'Payment Status', minWidth: 220 },
+  { id: 'Bookingstatus', label: 'Booking Status', minWidth: 220 },
+  { id: 'action', label: 'Action', minWidth: 280, align: 'center' },
 ];
 
 function createData(SI_no, name, email, mobileNo, address, check_in_date, check_out_date, TotalAmountUnit, paymentStatus, Bookingstatus) {
@@ -76,7 +76,7 @@ const deleteModalStyle = {
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
-    const [data, setData] = React.useState(rows); // Use this state to store and update rows data
+    //const [data, setData] = React.useState(rows); // Use this state to store and update rows data
   
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [viewModalOpen, setViewModalOpen] = React.useState(false);
@@ -158,12 +158,12 @@ export default function StickyHeadTable() {
     // Here you would typically make an API call to delete the booking
     handleCloseDeleteModal();
   };
-  const handleDropdownChange = (columnId, value, SI_no) => {
+  /*const handleDropdownChange = (columnId, value, SI_no) => {
     const updatedRows = data.map((row) =>
       row.SI_no === SI_no ? { ...row, [columnId]: value } : row
     );
     setData(updatedRows); // Update the state with the new value for the respective column
-  };
+  }; */
 
   const renderViewModal = () => (
     <Modal
@@ -334,7 +334,9 @@ export default function StickyHeadTable() {
       aria-describedby="delete-modal-description"
     >
       <Box sx={deleteModalStyle}>
-        <Typography id="delete-modal-title" variant="h6" component="h2" gutterBottom>
+        <Typography id="delete-modal-title" 
+                className='confirm_delete'
+                variant="h6" component="h2" gutterBottom>
           Confirm Delete
         </Typography>
         <Typography id="delete-modal-description" sx={{ mb: 3 }}>
@@ -352,8 +354,8 @@ export default function StickyHeadTable() {
     </Modal>
   );
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ fontSize: '12px', marginLeft: '20px', marginTop: '0px', marginRight: '20px' }}>
+    <Paper sx={{ width: '100%' }}>
+      <TableContainer sx={{ fontSize: '12px', marginLeft: '20px', maxHeight:'500px', marginTop: '0px', marginRight: '20px',width:'100%',whiteSpace:'nowrap' }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -361,7 +363,7 @@ export default function StickyHeadTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ fontWeight: 'bolder', fontSize: '14px' }}
+                  style={{ fontWeight: 'bolder', fontSize: '14px',minWidth:column.minWidth,whiteSpace:'nowrap' }}
                 >
                   {column.label}
                 </TableCell>
@@ -379,13 +381,19 @@ export default function StickyHeadTable() {
                       <TableCell key={column.id} align={column.align}>
                         {column.id === 'action' ? (
                           <div style={{display:'flex'}}>
-                            <IconButton onClick={() => handleView(row)} color="black">
+                            <IconButton 
+                            className='view'
+                            onClick={() => handleView(row)} color="black">
                               <VisibilityIcon />
                             </IconButton>
-                            <IconButton onClick={() => handleEdit(row)} color="black">
+                            <IconButton 
+                            className='edit'
+                            onClick={() => handleEdit(row)} color="black">
                               <EditIcon />
                             </IconButton>
-                            <IconButton onClick={() => handleDelete(row)} color="black">
+                            <IconButton 
+                            className='delete'
+                            onClick={() => handleDelete(row)} color="black">
                               <DeleteIcon />
                             </IconButton>
                           </div>

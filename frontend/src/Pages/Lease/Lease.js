@@ -331,7 +331,9 @@ export default function StickyHeadTable() {
       aria-describedby="delete-modal-description"
     >
       <Box sx={deleteModalStyle}>
-        <Typography id="delete-modal-title" variant="h6" component="h2" gutterBottom>
+        <Typography id="delete-modal-title" 
+                className='confirm_delete'
+                variant="h6" component="h2" gutterBottom>
           Confirm Delete
         </Typography>
         <Typography id="delete-modal-description" sx={{ mb: 3 }}>
@@ -412,13 +414,19 @@ export default function StickyHeadTable() {
                           </FormControl>
                         ) : column.id === 'action' ? (
                           <div  style={{display:'flex'}}>
-                            <IconButton onClick={() => handleView(row)} color="black">
+                            <IconButton 
+                            className='view'
+                            onClick={() => handleView(row)} color="black">
                               <VisibilityIcon />
                             </IconButton>
-                            <IconButton onClick={() => handleEdit(row)} color="black">
+                            <IconButton
+                            className='edit'
+                            onClick={() => handleEdit(row)} color="black">
                               <EditIcon />
                             </IconButton>
-                            <IconButton onClick={() => handleDelete(row)} color="black">
+                            <IconButton 
+                            className='delete'
+                            onClick={() => handleDelete(row)} color="black">
                               <DeleteIcon />
                             </IconButton>
                           </div>

@@ -6,10 +6,12 @@ const PropertySchema = new Schema(
     {
         propertyTitle: {
             type: String,
+            enum: ['Luxury', '3BHK', 'Apartment'],
             required: true,
         },
         propertyType: {
             type: String,
+            enum: ['Apartment', 'House', 'commercial', 'land',, 'office',, 'villa',],
             required: true,
         },
         address: {

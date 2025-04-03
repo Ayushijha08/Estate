@@ -170,8 +170,4 @@ body{
      .confirm_delete{
       font-weight: 700 !important;
      }
-     .logos{
-      background-color: aqua !important;
-      opacity:2px;
-      z-index: -1;
-     }
+      

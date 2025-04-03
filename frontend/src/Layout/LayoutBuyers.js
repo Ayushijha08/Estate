@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../Component/Header/Header";
-import Search from "../Search/Search";
+//import Search from "../Search/Search";
 
 import Sidebar from "../Component/Sidebar/Sidebar";
 import Buyers from "../Pages/Buyers/Buyers";
@@ -15,7 +15,7 @@ const LayoutBuyers=()=>
             <Sidebar/>
             <div className="content">
             <Header className="header" />
-            <Search buttonText="Add Buyer"/>
+          
             <Buyers/>
             
 

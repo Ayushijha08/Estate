@@ -21,7 +21,7 @@ const Sidebar=()=>
               className="logos"
               width={250} 
               height={95} 
-              style={{background:"black"}}
+             // style={{background:"black"}}
 
             />
 

@@ -1,403 +1,412 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Select, MenuItem, FormControl,InputLabel } from '@mui/material';
-import { Modal, Box, Typography, Grid, TextField, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 
+import { useEffect, useState } from "react";
+import {  InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-const columns = [
-  { id: 'SI_no', label: 'SI NO.', minWidth: 100 },
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'email', label: 'E-mail', align: 'right' },
-  { id: 'mobileNo', label: 'Mobile Number', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'address', label: 'Address', flex: 1, align: 'right', minWidth: 180 },
-  { id: 'lisenceNo', label: 'Lisence No', flex: 1, align: 'right' },
-  { id: 'experience', label: 'Experience', flex: 1, align: 'right', format: (value) => value.toFixed(2) },
-  { id: 'commissionRate', label: 'Commission Rate', flex: 1, align: 'right' },
-  { id: 'status', label: 'Status', flex: 1, align: 'right' },
-  { id: 'action', label: 'Action', flex: 1, align: 'left', minWidth: 250 }, // Increased width for action column
-];
+import {
+  Table,
+  Select,
+  MenuItem,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
+  Modal,
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  TextField,
+  Button,
+  TableContainer,
+} from "@mui/material";
+import {
+  Visibility,
+  Edit,
+  Delete,
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import axios from "axios";
+const AgentTable = () => {
+  const [data, setData] = useState([
+    {
+      id: 1,
+      name: "Luxury",
+      email: "Apartment",
+      mobileNo:"121324",
+      address: "Ranchi",
+      licenseNo:"423",
+      experience:"5",
+      commissionRate:"546",
+      status: "Active",
+    },
+    {
+      id: 2,
+      name: "Luxury",
+      email: "Apartment",
+      mobileNo:"121324",
+      address: "Ranchi",
+      licenseNo:"423",
+      experience:"5",
+      commissionRate:"546",
+      status: "Active",
+    },
+    
+  ]);
 
-function createData(SI_no, name, email, mobileNo, address, lisenceNo, experience, commissionRate, status) {
-  return { SI_no, name, email, mobileNo, address, lisenceNo, experience, commissionRate, status };
-}
-
-const rows = [
-  createData('1', 'Amit', 'Amit@gmail.com', 123445, 'Ranchi', 100, 2, 10000, 'Active'),
-  createData('2', 'John', 'John@gmail.com', 123446, 'Bangalore', 100001, 3, 110000, 'Inactive'),
-  createData('3', 'Jane', 'Jane@gmail.com', 123447, 'Delhi', 100002, 4, 120000, 'Active'),
-  createData('4', 'Doe', 'Doe@gmail.com', 123448, 'Kolkata', 100003, 5, 130000, 'Inactive'),
-];
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '80%',
-  maxWidth: 800,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 1,
-  maxHeight: '90vh',
-  overflow: 'auto'
-};
-
-const deleteModalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 1,
-  textAlign: 'center'
-};
-
-export default function StickyHeadTable() {
-  const [page, setPage] = React.useState(0);
-    const [data, setData] = React.useState(rows); // Use this state to store and update rows data
-  
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [viewModalOpen, setViewModalOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = React.useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
-  const [selectedAgent, setSelectedAgent] = React.useState(null);
-  const [editFormData, setEditFormData] = React.useState({});
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80%",
+    maxWidth: 800,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 1,
+    maxHeight: "90vh",
+    overflow: "auto",
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const deleteModalStyle = {
+    ...modalStyle,
+    width: 400,
+    textAlign: "center",
   };
 
-  const handleView = (agent) => {
-    setSelectedAgent(agent);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedAgents, setSelectedAgents] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+  const [agents, setAgents] = useState([]);
+
+  const getAllAgents = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/agent/getAllAgents`      );
+      console.log("response", res.data);
+      setAgents(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllAgents();
+  }, []);
+  const handleView = (Agents) => {
+    setSelectedAgents(Agents);
     setViewModalOpen(true);
   };
 
-  const handleEdit = (agent) => {
-    setSelectedAgent(agent);
-    setEditFormData(agent);
+  const handleEdit = (Agents) => {
+    setSelectedAgents(Agents);
+    setEditFormData(Agents);
     setEditModalOpen(true);
   };
 
-  const handleDelete = (agent) => {
-    setSelectedAgent(agent);
+  const handleDelete = (Agents) => {
+    setSelectedAgents(Agents);
     setDeleteModalOpen(true);
   };
 
-  const handleCloseViewModal = () => {
-    setViewModalOpen(false);
-    setSelectedAgent(null);
-  };
-
-  const handleCloseEditModal = () => {
-    setEditModalOpen(false);
-    setSelectedAgent(null);
-    setEditFormData({});
-  };
-
-  const handleCloseDeleteModal = () => {
-    setDeleteModalOpen(false);
-    setSelectedAgent(null);
-  };
+  const handleCloseViewModal = () => setViewModalOpen(false);
+  const handleCloseEditModal = () => setEditModalOpen(false);
+  const handleCloseDeleteModal = () => setDeleteModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
     setEditFormData({
       ...editFormData,
-      [field]: event.target.value
+      [field]: event.target.value,
     });
   };
 
   const handleUpdate = () => {
-    console.log('Updating agent:', editFormData);
-    // Here you would typically make an API call to update the agent
+    console.log("Updating Agents:", editFormData);
+    // Here you would typically make an API call to update the Agents
     handleCloseEditModal();
   };
 
   const handleConfirmDelete = () => {
-    console.log('Deleting agent:', selectedAgent);
-    // Here you would typically make an API call to delete the agent
+    console.log("Deleting Agents:", selectedAgents);
+    // Here you would typically make an API call to delete the Agents
     handleCloseDeleteModal();
   };
-  const handleDropdownChange = (columnId, value, SI_no) => {
-    const updatedRows = data.map((row) =>
-      row.SI_no === SI_no ? { ...row, [columnId]: value } : row
+  const handleStatusChange = (id, newStatus) => {
+    setData((prevData) =>
+      prevData.map((row) =>
+        row.id === id ? { ...row, status: newStatus } : row
+      )
     );
-    setData(updatedRows); // Update the state with the new value for the respective column
   };
-
-  const renderViewModal = () => (
-    <Modal
-      open={viewModalOpen}
-      onClose={handleCloseViewModal}
-      aria-labelledby="view-modal-title"
-      aria-describedby="view-modal-description"
-    >
-      <Box sx={modalStyle}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography id="view-modal-title" variant="h6" component="h2">
-            agent Details
-          </Typography>
-          <IconButton onClick={handleCloseViewModal} size="small">
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        
-        {selectedAgent && (
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Name:</strong> {selectedAgent.name}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>E-mail:</strong> {selectedAgent.email}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1"><strong>mobile No:</strong> {selectedAgent.mobileNo}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Address:</strong> ₹{selectedAgent.address}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>lisence No:</strong> {selectedAgent.lisenceNo} </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Experience:</strong> {selectedAgent.experience}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Commission Rate:</strong> {selectedAgent.commissionRate}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Status:</strong> {selectedAgent.status}</Typography>
-            </Grid>
-          </Grid>
-        )}
-      </Box>
-    </Modal>
-  );
-
-  const renderEditModal = () => (
-    <Modal
-      open={editModalOpen}
-      onClose={handleCloseEditModal}
-      aria-labelledby="edit-modal-title"
-      aria-describedby="edit-modal-description"
-    >
-      <Box sx={modalStyle}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography id="edit-modal-title" variant="h6" component="h2">
-            Edit agent
-          </Typography>
-          <IconButton onClick={handleCloseEditModal} size="small">
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Name"
-              value={editFormData.name || ''}
-              onChange={handleEditInputChange('name')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="E-mail"
-              value={editFormData.email || ''}
-              onChange={handleEditInputChange('email')}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Mobile No"
-              value={editFormData.mobileNo || ''}
-              onChange={handleEditInputChange('mobileNo')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Address"
-              //type="number"
-              value={editFormData.address || ''}
-              onChange={handleEditInputChange('address')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Lisence No"
-              //type="number"
-              value={editFormData.lisenceNo || ''}
-              onChange={handleEditInputChange('lisenceNo')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Experience "
-              value={editFormData.experience || ''}
-              onChange={handleEditInputChange('experience')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label=" Commission Rate"
-              value={editFormData.commissionRate || ''}
-              onChange={handleEditInputChange('commissionRate')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Status"
-              value={editFormData.status || ''}
-              onChange={handleEditInputChange('status')}
-            />
-          </Grid>
-        </Grid>
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-          <Button variant="outlined" onClick={handleCloseEditModal}>
-            Cancel
-          </Button>
-          <Button variant="contained" onClick={handleUpdate}>
-            Update
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
-  );
-
-  const renderDeleteModal = () => (
-    <Modal
-      open={deleteModalOpen}
-      onClose={handleCloseDeleteModal}
-      aria-labelledby="delete-modal-title"
-      aria-describedby="delete-modal-description"
-    >
-      <Box sx={deleteModalStyle}>
-        <Typography id="delete-modal-title" 
-                className='confirm_delete'
-                variant="h6" component="h2" gutterBottom>
-          Confirm Delete
-        </Typography>
-        <Typography id="delete-modal-description" sx={{ mb: 3 }}>
-          Are you sure you want to delete this agent?
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <Button variant="outlined" onClick={handleCloseDeleteModal}>
-            No
-          </Button>
-          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-            Yes
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
-  );
-
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer className="table" sx={{ maxHeight: 440, fontSize: '12px', marginLeft: '20px', marginTop: '0px', marginRight: '20px' }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{  fontWeight: 'bolder', fontSize: '14px' }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.SI_no}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.id === 'status' ? (
-                          <FormControl variant="outlined" sx={{ minWidth: 90 }}>
-                            <InputLabel>Status</InputLabel>
-                            <Select
-                              value={row.status}
-                              onChange={(e) => handleDropdownChange('status', e.target.value, row.SI_no)}
-                              label="Status"
-                            >
-                              <MenuItem value="active">Active</MenuItem>
-                              <MenuItem value="inactive">Inactive</MenuItem>
-                            </Select>
-                          </FormControl>
-                        ) : column.id === 'action' ? (
-                          <div>
-                            <IconButton 
-                            className='view'
-                            onClick={() => handleView(row)} color="black">
-                              <VisibilityIcon />
-                            </IconButton>
-                            <IconButton 
-                            className='edit'
-                            onClick={() => handleEdit(row)} color="black">
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton 
-                            className='delete'
-                            onClick={() => handleDelete(row)} color="black">
-                              <DeleteIcon />
-                            </IconButton>
-                          </div>
-                        ) : (
-                          column.format && typeof value === 'number' ? column.format(value) : value
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+    <>
+    <div className='flex'>
+    <TextField
+           className='search'
+
+        label="Search"
+        variant="outlined"
+       // fullWidth
+      //  value={searchQuery}
+       // onChange={handleSearchChange}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+        style={{ marginBottom: '20px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
       />
-      {renderViewModal()}
-      {renderEditModal()}
-      {renderDeleteModal()}
-    </Paper>
+
+
+    <Button 
+    variant="contained" 
+   // color="primary" 
+ //onClick={handleAddNew}
+ style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
+
+  >
+    Add Agent
+  </Button>
+  
+
+  
+  </div>
+
+    <TableContainer
+      component={Paper}
+      style={{ overflowX: "auto", maxWidth: 1250 }}
+    >
+      <Table className="w-full border border-gray-300">
+        <TableHead
+          sx={{
+            top: 0,
+            background: "white",
+            zIndex: 2,
+            position: "sticky",
+            fontWeight: "bold",
+          }}
+        >
+
+          <TableRow className="bg-gray-200">
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              ID
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Name
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              E-mail
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Mobile No
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            Address
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            lisence No
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              {" "}
+              Experience
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            commission Rate
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Status
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Action
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          { agents.length>0 && agents.map((Agents) => (
+            <TableRow
+              key={Agents._id}
+              className="text-center"
+              sx={{ fontWeight: "bold" }}
+            >
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents._id}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >          
+                {Agents.name}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents.email}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents.mobileNo}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents.address}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents.licenseNo}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents.experience}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {Agents.commissionRate}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                <Select
+                  value={Agents.status}
+                  onChange={(e) => handleStatusChange(Agents._id, e.target.value)}
+                  className="border p-1 rounded"
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="InActive">InActive</MenuItem>
+                </Select>
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
+                <TableContainer
+                  style={{
+                    display: "flex",
+                    gap: "5px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <IconButton
+                    sx={{ color: "blue" }}
+                    fontweight="bolder"
+                    onClick={() => handleView(Agents)}
+                  >
+                    <Visibility />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: "green" }}
+                    onClick={() => handleEdit(Agents)}
+                  >
+                    <Edit />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => handleDelete(Agents)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </TableContainer>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {/* View Modal */}
+      <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
+        <Box sx={modalStyle}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h6">Agents Details</Typography>
+            <IconButton onClick={handleCloseViewModal}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {selectedAgents && (
+            <Grid container spacing={2} mt={2}>
+              {Object.entries(selectedAgents).map(([key, value]) => (
+                <Grid item xs={6} key={key}>
+                  <Typography>
+                    <strong>{key}:</strong> {value}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Box>
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal open={editModalOpen} onClose={handleCloseEditModal}>
+        <Box sx={modalStyle}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h6">Edit Agents</Typography>
+            <IconButton onClick={handleCloseEditModal}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Grid container spacing={2} mt={2}>
+            {Object.keys(editFormData).map((field) => (
+              <Grid item xs={6} key={field}>
+                <TextField
+                  label={field}
+                  value={editFormData[field] || ""}
+                  onChange={handleEditInputChange(field)}
+                  fullWidth
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <Box display="flex" justifyContent="flex-end" mt={3}>
+            <Button variant="outlined" onClick={handleCloseEditModal}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+              Update
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
+        <Box sx={deleteModalStyle}>
+          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography my={2}>
+            Are you sure you want to delete this Agents?
+          </Typography>
+          <Box display="flex" justifyContent="center" gap={2}>
+            <Button variant="outlined" onClick={handleCloseDeleteModal}>
+              CANCLE
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleConfirmDelete}
+            >
+              DELETE
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </TableContainer>
+    </>
   );
-}
+};
+
+export default AgentTable;

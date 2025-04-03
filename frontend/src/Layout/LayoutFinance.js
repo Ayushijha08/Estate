@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../Component/Header/Header";
-import Search from "../Search/Search";
+
 
 import Finance from "../Pages/Finance/Finance";
 import Sidebar from "../Component/Sidebar/Sidebar";
@@ -14,7 +14,6 @@ const LayoutFinance=()=>
             <Sidebar/>
             <div className="content">
             <Header className="header" />
-            <Search buttonText="Add Finance" />
             <Finance />
             
 

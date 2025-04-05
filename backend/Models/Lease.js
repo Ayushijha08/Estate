@@ -34,11 +34,11 @@ const LeaseSchema = new Schema(
             required: true,
         },
         MonthlyRent: {
-            type: Number,
+            type: String,
             required: true,
         },
         SecurityDeposit: {
-            type: Number,
+            type: String,
             required: true,
         },
         paymentStatus: {

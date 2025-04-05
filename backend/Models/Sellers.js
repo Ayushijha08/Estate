@@ -27,7 +27,7 @@ const SellerSchema = new Schema(
             required: true,
         },
         ListedPrice: {
-            type: Number,
+            type: String,
             required: true,
         },
         Status: {

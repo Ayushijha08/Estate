@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import {  InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import TablePagination from '@mui/material/TablePagination';
+
 
 import {
   Table,
@@ -15,6 +18,8 @@ import {
   Modal,
   Box,
   Typography,
+  FormControl,
+  InputLabel,
   Paper,
   Grid,
   TextField,
@@ -50,16 +55,7 @@ const PropertyTable = () => {
       furnishing: "furnished",
       status: "Active",
     },
-    {
-      id: 3,
-      propertyTitle: "1bhk",
-      propertyType: "Apartment",
-      address: "MP",
-      price: 100000,
-      areaSqft: 100,
-      furnishing: "furnished",
-      status: "InActive",
-    },
+   
   ]);
 
   const modalStyle = {
@@ -82,13 +78,17 @@ const PropertyTable = () => {
     width: 400,
     textAlign: "center",
   };
-
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [properties, setProperties] = useState([]);
+  const [searchTerm,setSearchTerm]= useState("");
+  const [apiProperties,setApiProperties]=useState([]);
 
   const getAllProperty = async () => {
     try {
@@ -97,6 +97,7 @@ const PropertyTable = () => {
       );
       console.log("response", res.data);
       setProperties(res.data);
+      setApiProperties(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -130,8 +131,39 @@ const PropertyTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page
+  };
+  
+  const handleSearchChange = (e) => {
+    console.log("target", e.target);
+    
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
 
-  const handleUpdate = () => {
+    if (value === "") {
+        setProperties(apiProperties); // Reset to full list when search is empty
+        return;
+    }
+
+    const filtered = apiProperties.filter((property) => {
+      return (
+        property.propertyTitle.toLowerCase().includes(value) ||   // propertyTitle = gfdgf.includes(gfdgf)
+        property.address.toLowerCase().includes(value) ||
+        property.propertyType.toLowerCase().includes(value) ||
+        property.price.toString().toLowerCase().includes(value)
+      );
+    });
+
+    setProperties(filtered);
+};
+
+    const handleUpdate = () => {
     console.log("Updating property:", editFormData);
     // Here you would typically make an API call to update the property
     handleCloseEditModal();
@@ -142,6 +174,23 @@ const PropertyTable = () => {
     // Here you would typically make an API call to delete the property
     handleCloseDeleteModal();
   };
+  const handleTitleChange = (id, newTitle) => {
+    setProperties((prev) =>
+      prev.map((property) => (property._id === id ? { ...property, propertyTitle: newTitle } : property))
+    );
+  };
+  const handleTypeChange = (id, newType) => {
+    setProperties((prev) =>
+      prev.map((property) => (property._id === id ? { ...property, propertyType: newType } : property))
+    );
+  };
+
+  const handleFurnishingChange = (id, newFurnishing) => {
+    setProperties((prev) =>
+      prev.map((property) => (property._id === id ? { ...property, furnishing: newFurnishing } : property))
+    );
+  };
+
   const handleStatusChange = (id, newStatus) => {
     setData((prevData) =>
       prevData.map((row) =>
@@ -157,9 +206,9 @@ const PropertyTable = () => {
 
         label="Search"
         variant="outlined"
-       // fullWidth
-      //  value={searchQuery}
-       // onChange={handleSearchChange}
+      
+        value={searchTerm}
+        onChange={handleSearchChange}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -173,9 +222,10 @@ const PropertyTable = () => {
 
     <Button 
     variant="contained" 
+    startIcon={<AddIcon />}
    // color="primary" 
  //onClick={handleAddNew}
- style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
+ style={{ marginBottom: '20px',textWrap:'nowrap',display:'flex',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
     Add Property
@@ -197,6 +247,7 @@ const PropertyTable = () => {
             zIndex: 2,
             position: "sticky",
             fontWeight: "bold",
+            whiteSpace:"nowrap"
           }}
         >
           <TableRow className="bg-gray-200">
@@ -225,14 +276,15 @@ const PropertyTable = () => {
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { properties.length>0 && properties.map((property) => (
-            <TableRow
+          { properties.length>0 && 
+properties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((property, index) => (
+  <TableRow
               key={property._id}
               className="text-center"
               sx={{ fontWeight: "bold" }}
@@ -247,13 +299,34 @@ const PropertyTable = () => {
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {property.propertyTitle}
+                <Select
+                    value={property.propertyTitle}
+                    variant="standard"
+
+                    onChange={(e) => handleTitleChange(property._id, e.target.value)}
+                  >
+                    <MenuItem value="Luxury">Luxury</MenuItem>
+                    <MenuItem value="3BHK">3BHK</MenuItem>
+                    <MenuItem value="Apartment">Apartment</MenuItem>
+                  </Select>
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {property.propertyType}
+                <Select
+                      variant="standard"
+
+                    value={property.propertyType}
+                    onChange={(e) => handleTypeChange(property._id, e.target.value)}
+                  >
+                    <MenuItem value="Apartment">Apartment</MenuItem>
+                    <MenuItem value="House">House</MenuItem>
+                    <MenuItem value="Commercial">Commercial</MenuItem>
+                    <MenuItem value="Land">Land</MenuItem>
+                    <MenuItem value="Office">Office</MenuItem>
+                    <MenuItem value="Villa">Villa</MenuItem>
+                  </Select>
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
@@ -262,7 +335,7 @@ const PropertyTable = () => {
                 {property.address}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center",}}
                 className="border p-2"
               >
                 {property.price}
@@ -276,8 +349,16 @@ const PropertyTable = () => {
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >
-                {property.furnishing}
+              ><Select
+              value={property.furnishing}
+              variant="standard"
+              sx={{minWidth:'150'}}
+              onChange={(e) => handleFurnishingChange(property._id, e.target.value)}
+            >
+              <MenuItem value="Furnished">Furnished</MenuItem>
+              <MenuItem value="Semi-Furnished">Semi-Furnished</MenuItem>
+              <MenuItem value="Unfurnished">Unfurnished</MenuItem>
+            </Select>
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
@@ -285,11 +366,14 @@ const PropertyTable = () => {
               >
                 <Select
                   value={property.status}
+                  variant="standard"
+
                   onChange={(e) => handleStatusChange(property._id, e.target.value)}
                   className="border p-1 rounded"
                 >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="InActive">InActive</MenuItem>
+                  <MenuItem value="Available">Available</MenuItem>
+                  <MenuItem value="Sold">Sold</MenuItem>
+                  <MenuItem value="Rented">Rented</MenuItem>
                 </Select>
               </TableCell>
               <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
@@ -351,35 +435,102 @@ const PropertyTable = () => {
 
       {/* Edit Modal */}
       <Modal open={editModalOpen} onClose={handleCloseEditModal}>
-        <Box sx={modalStyle}>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">Edit Property</Typography>
-            <IconButton onClick={handleCloseEditModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Grid container spacing={2} mt={2}>
-            {Object.keys(editFormData).map((field) => (
-              <Grid item xs={6} key={field}>
-                <TextField
-                  label={field}
-                  value={editFormData[field] || ""}
-                  onChange={handleEditInputChange(field)}
-                  fullWidth
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
-              Update
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+  <Box sx={modalStyle}>
+    <Box display="flex" justifyContent="space-between">
+      <Typography variant="h6">Edit Property</Typography>
+      <IconButton onClick={handleCloseEditModal}>
+        <CloseIcon />
+      </IconButton>
+    </Box>
+    <Grid container spacing={2} mt={2}>
+      {Object.keys(editFormData).map((field) => (
+        <Grid item xs={6} key={field}>
+          {field === "propertyTitle" ? (
+            <FormControl fullWidth>
+              <InputLabel
+              id="demo-simple-select-label"
+              >Property Title</InputLabel>
+              <Select
+               labelId="demo-simple-select-label"
+               id="demo-simple-select"
+               variant="standard"
+
+                value={editFormData[field] || ""}
+                onChange={handleEditInputChange(field)}
+              >
+                <MenuItem value="Luxury">Luxury</MenuItem>
+                <MenuItem value="3BHK">3BHK</MenuItem>
+                <MenuItem value="Apartment">Apartment</MenuItem>
+              </Select>
+            </FormControl>
+          ) : field === "propertyType" ? (
+            <FormControl fullWidth>
+              <InputLabel>Property Type</InputLabel>
+              <Select
+                value={editFormData[field] || ""}
+                variant="standard"
+
+                onChange={handleEditInputChange(field)}
+              >
+                <MenuItem value="Apartment">Apartment</MenuItem>
+                <MenuItem value="House">House</MenuItem>
+                <MenuItem value="Commercial">Commercial</MenuItem>
+                <MenuItem value="Land">Land</MenuItem>
+                <MenuItem value="Office">Office</MenuItem>
+                <MenuItem value="Villa">Villa</MenuItem>
+              </Select>
+            </FormControl>
+          ) : field === "furnishing" ? (
+            <FormControl fullWidth>
+              <InputLabel>Furnishing</InputLabel>
+              <Select
+                value={editFormData[field] || ""}
+                variant="standard"
+
+                onChange={handleEditInputChange(field)}
+              >
+                <MenuItem value="Furnished">Furnished</MenuItem>
+                <MenuItem value="Semi-Furnished">Semi-Furnished</MenuItem>
+                <MenuItem value="Unfurnished">Unfurnished</MenuItem>
+              </Select>
+            </FormControl>
+          )
+          : field === "status" ? (
+            <FormControl fullWidth>
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={editFormData[field] || ""}
+                variant="standard"
+
+                onChange={handleEditInputChange(field)}
+              >
+                <MenuItem value="Available">Available</MenuItem>
+                  <MenuItem value="Sold">Sold</MenuItem>
+                  <MenuItem value="Rented">Rented</MenuItem>
+             </Select>
+            </FormControl>
+          )
+          : (
+            <TextField
+              label={field.charAt(0).toUpperCase() + field.slice(1)}
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+            />
+          )}
+        </Grid>
+      ))}
+    </Grid>
+    <Box display="flex" justifyContent="flex-end" mt={3}>
+      <Button variant="outlined" onClick={handleCloseEditModal}>
+        Cancel
+      </Button>
+      <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+        Update
+      </Button>
+    </Box>
+  </Box>
+</Modal>
 
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
@@ -403,6 +554,16 @@ const PropertyTable = () => {
         </Box>
       </Modal>
     </TableContainer>
+    <TablePagination
+  rowsPerPageOptions={[5, 10, 25]}
+  component="div"
+  count={properties.length}
+  rowsPerPage={rowsPerPage}
+  page={page}
+  onPageChange={handleChangePage}
+  onRowsPerPageChange={handleChangeRowsPerPage}
+/>
+
     </>
   );
 };

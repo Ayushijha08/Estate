@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import {  InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import TablePagination from '@mui/material/TablePagination';
 
 import {
   Table,
@@ -68,13 +69,17 @@ const LeaseTable = () => {
     width: 400,
     textAlign: "center",
   };
-
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedLease, setSelectedLease] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [Lease, setLease] = useState([]);
+  const [searchTerm,setSearchTerm]= useState("");
+  const [apiLease,setApiLease]=useState([]);
 
   const getAllLease = async () => {
     try {
@@ -83,6 +88,8 @@ const LeaseTable = () => {
       );
       console.log("response", res.data);
       setLease(res.data);
+      setApiLease(res.data);
+
     } catch (error) {
       console.log(error);
     }
@@ -116,7 +123,39 @@ const LeaseTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleSearchChange = (e) => {
+    console.log("target", e.target);
+    
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
 
+    if (value === "") {
+        setLease(apiLease); // Reset to full list when search is empty
+        return;
+    }
+
+    const filtered = apiLease.filter((lease) => {
+      return (
+        lease.name.toLowerCase().includes(value) ||   // propertyTitle = gfdgf.includes(gfdgf)
+        lease.address.toLowerCase().includes(value) ||
+        lease.email.toLowerCase().includes(value) ||
+        lease.mobileNo.toString().toLowerCase().includes(value)
+      );
+    });
+
+    setLease(filtered);
+};
+
+ 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page
+  };
+  
   const handleUpdate = () => {
     console.log("Updating lease:", editFormData);
     // Here you would typically make an API call to update the lease
@@ -143,6 +182,9 @@ const LeaseTable = () => {
 
         label="Search"
         variant="outlined"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        
        // fullWidth
       //  value={searchQuery}
        // onChange={handleSearchChange}
@@ -166,14 +208,11 @@ const LeaseTable = () => {
   >
     Add Lease
   </Button>
-  
-
-  
   </div>
 
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1250 }}
+      style={{ overflowX: "auto", maxWidth: 1250 ,whiteSpace:"nowrap"}}
     >
       <Table className="w-full border border-gray-300">
         <TableHead
@@ -227,8 +266,9 @@ const LeaseTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          { Lease.length>0 && Lease.map((lease) => (
-            <TableRow
+          { Lease.length>0 && 
+    Lease.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((lease, index) => (
+      <TableRow
               key={lease._id}
               className="text-center"
               sx={{ fontWeight: "bold" }}
@@ -291,6 +331,8 @@ const LeaseTable = () => {
               <TableCell>
           <Select
             value={lease.paymentStatus}
+            variant="standard"
+
             onChange={(e) => handleStatusChange(lease._id, "paymentStatus", e.target.value)}
           >
             <MenuItem value="Paid">Paid</MenuItem>
@@ -302,6 +344,8 @@ const LeaseTable = () => {
         {/* Lease Status Dropdown */}
         <TableCell>
           <Select
+                        variant="standard"
+
             value={lease.LeaseStatus}
             onChange={(e) => handleStatusChange(lease._id, "LeaseStatus", e.target.value)}
           >
@@ -370,36 +414,71 @@ const LeaseTable = () => {
       </Modal>
 
       {/* Edit Modal */}
-      <Modal open={editModalOpen} onClose={handleCloseEditModal}>
-        <Box sx={modalStyle}>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">Edit lease</Typography>
-            <IconButton onClick={handleCloseEditModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Grid container spacing={2} mt={2}>
-            {Object.keys(editFormData).map((field) => (
-              <Grid item xs={6} key={field}>
-                <TextField
-                  label={field}
-                  value={editFormData[field] || ""}
-                  onChange={handleEditInputChange(field)}
-                  fullWidth
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
-              Update
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+      {/* Edit Modal */}
+<Modal open={editModalOpen} onClose={handleCloseEditModal}>
+  <Box sx={modalStyle}>
+    <Box display="flex" justifyContent="space-between">
+      <Typography variant="h6">Edit Lease</Typography>
+      <IconButton onClick={handleCloseEditModal}>
+        <CloseIcon />
+      </IconButton>
+    </Box>
+
+    <Grid container spacing={2} mt={2}>
+      {Object.keys(editFormData).map((field) => (
+        <Grid item xs={6} key={field}>
+          {/* Payment Status Dropdown */}
+          {field === "paymentStatus" ? (
+            <Select
+              fullWidth
+              variant="standard"
+              value={editFormData[field] || ""}
+              onChange={(e) => handleEditInputChange(field)(e)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>Select Payment Status</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
+              <MenuItem value="Completed">Completed</MenuItem>
+              <MenuItem value="Failed">Failed</MenuItem>
+            </Select>
+          ) : field === "LeaseStatus" ? (
+            /* Lease Status Dropdown */
+            <Select
+              fullWidth
+              variant="standard"
+
+              value={editFormData[field] || ""}
+              onChange={(e) => handleEditInputChange(field)(e)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>Select Lease Status</MenuItem>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Expired">Expired</MenuItem>
+              <MenuItem value="Terminated">Terminated</MenuItem>
+            </Select>
+          ) : (
+            /* Default TextField for other fields */
+            <TextField
+              label={field}
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+            />
+          )}
+        </Grid>
+      ))}
+    </Grid>
+
+    <Box display="flex" justifyContent="flex-end" mt={3}>
+      <Button variant="outlined" onClick={handleCloseEditModal}>
+        Cancel
+      </Button>
+      <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+        Update
+      </Button>
+    </Box>
+  </Box>
+</Modal>
 
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
@@ -423,6 +502,15 @@ const LeaseTable = () => {
         </Box>
       </Modal>
     </TableContainer>
+     <TablePagination
+      rowsPerPageOptions={[5, 10, 25]}
+      component="div"
+      count={Lease.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+    />
     </>
   );
 };

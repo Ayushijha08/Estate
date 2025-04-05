@@ -24,15 +24,15 @@ const BookingSchema = new Schema({
         required: true,
     },
     check_in_date: {
-        type: Date,
+        type: String,
         required: true,
     },
     check_out_date: {
-        type: Date,
+        type: String,
         required: true,
     },
     TotalAmountUnit: {
-        type: Number,
+        type:String,
         required: true,
         min: 0,
     },

@@ -1,4 +1,4 @@
-//name, email, mobileNo, address, LeaseStartDate, LeaseEndDate, MonthlyRent, SecurityDeposit, paymentStatus, LeaseStatus
+
 import { useEffect, useState } from "react";
 import {  InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,6 +13,9 @@ import {
   TableCell,
   IconButton,
   Modal,
+  FormControl,
+  InputLabel,
+ 
   Box,
   Typography,
   Paper,
@@ -27,17 +30,19 @@ import {
   Delete,
   Close as CloseIcon,
 } from "@mui/icons-material";
+import TablePagination from '@mui/material/TablePagination';
+
 import axios from "axios";
-const SellerTable = () => {
+const SellersTable = () => {
   const [data, setData] = useState([
-    {////name, email, mobileNo, address, sellerId, ListedPrice, Status
+    {// name, email, mobileNo, address, PropertyId, ListedPrice, Status
       id: 1,
       name: "Luxury",
       email: "Apartment",
       mobileNo:"121324",
       address: "Ranchi",
-      PropertyId:"546",
-      ListedPrice:"6557",
+      PropertyId:"423",
+      ListedPrice:"5",
       status: "Active",
     },
     
@@ -63,41 +68,47 @@ const SellerTable = () => {
     width: 400,
     textAlign: "center",
   };
+  const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    
 
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedSeller, setSelectedSeller] = useState(null);
+  const [selectedSellers, setSelectedSellers] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [sellers, setSellers] = useState([]);
+  const [searchTerm,setSearchTerm]= useState("");
+    const [apiSellers,setApiSellers]=useState([]);
+  
 
-  const getAllseller = async () => {
+  const getAllsellers = async () => {
     try {
       const res = await axios.get(
-       ` http://localhost:3001/seller/getAllsellers`
-      );
+        `http://localhost:3001/Sellers/getAllSellers`      );
       console.log("response", res.data);
       setSellers(res.data);
+      setApiSellers(res.data);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    getAllseller();
+    getAllsellers();
   }, []);
-  const handleView = (seller) => {
-    setSelectedSeller(seller);
+  const handleView = (sellers) => {
+    setSelectedSellers(sellers);
     setViewModalOpen(true);
   };
 
-  const handleEdit = (seller) => {
-    setSelectedSeller(seller);
-    setEditFormData(seller);
+  const handleEdit = (sellers) => {
+    setSelectedSellers(sellers);
+    setEditFormData(sellers);
     setEditModalOpen(true);
   };
 
-  const handleDelete = (seller) => {
-    setSelectedSeller(seller);
+  const handleDelete = (sellers) => {
+    setSelectedSellers(sellers);
     setDeleteModalOpen(true);
   };
 
@@ -106,30 +117,67 @@ const SellerTable = () => {
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
-    setEditFormData({
-      ...editFormData,
-      [field]: event.target.value,
-    });
+    setEditFormData((prev) => ({
+      ...prev,
+      [field]: event.target.value, 
+    }));
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page
+  };
+  
+  const handleSearchChange = (e) => {
+    console.log("target", e.target);
+    
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    if (value === "") {
+        setSellers(apiSellers); // Reset to full list when search is empty
+        return;
+    }
+
+    const filtered = apiSellers.filter((sellers) => {
+      return (
+        sellers.name.toLowerCase().includes(value) ||   // propertyTitle = gfdgf.includes(gfdgf)
+        sellers.address.toLowerCase().includes(value) ||
+        sellers.mobileNo.toLowerCase().includes(value) ||
+        sellers.email.toString().toLowerCase().includes(value)
+      );
+    });
+
+    setSellers(filtered);
+};
 
   const handleUpdate = () => {
-    console.log("Updating seller:", editFormData);
-    // Here you would typically make an API call to update the seller
+    console.log("Updating sellers:", editFormData);
+    // Here you would typically make an API call to update the sellers
     handleCloseEditModal();
   };
 
   const handleConfirmDelete = () => {
-    console.log("Deleting seller:", selectedSeller);
-    // Here you would typically make an API call to delete the seller
+    console.log("Deleting sellers:", selectedSellers);
+    // Here you would typically make an API call to delete the sellers
     handleCloseDeleteModal();
   };
   const handleStatusChange = (id, newStatus) => {
-    setData((prevData) =>
-      prevData.map((row) =>
-        row.id === id ? { ...row, status: newStatus } : row
+    setSellers((prevSellers) =>
+      prevSellers.map((seller) =>
+        seller._id === id ? { ...seller, status: newStatus } : seller
       )
     );
+  
+    // Also update edit form data if it's being edited
+    if (editFormData && editFormData._id === id) {
+      setEditFormData((prev) => ({ ...prev, status: newStatus }));
+    }
   };
+  
   return (
     <>
     <div className='flex'>
@@ -139,6 +187,9 @@ const SellerTable = () => {
         label="Search"
         variant="outlined"
        // fullWidth
+       value={searchTerm}
+        onChange={handleSearchChange}
+        
       //  value={searchQuery}
        // onChange={handleSearchChange}
         InputProps={{
@@ -159,7 +210,7 @@ const SellerTable = () => {
  style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
-    Add seller
+    Add sellers
   </Button>
   
 
@@ -180,29 +231,30 @@ const SellerTable = () => {
             fontWeight: "bold",
           }}
         >
+
           <TableRow className="bg-gray-200">
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              S.No
+              ID
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Name
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              email
+            email
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              mobileNo
+            mobileNo
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              Address
+            address
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
             PropertyId
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            ListedPrice
+              {" "}
+              ListedPrice
             </TableCell>
-            
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
@@ -212,9 +264,10 @@ const SellerTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          { sellers.length>0 && sellers.map((seller) => (
+          { sellers.length>0 && sellers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // ✅ Apply pagination here
+      .map((sellers) => (
             <TableRow
-              key={seller._id}
+              key={sellers._id}
               className="text-center"
               sx={{ fontWeight: "bold" }}
             >
@@ -222,52 +275,53 @@ const SellerTable = () => {
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {seller._id}
+                {sellers._id}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >          
+                {sellers.name}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {seller.name}
+                {sellers.email}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {seller.email}
+                {sellers.mobileNo}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {seller.mobileNo}
-              </TableCell>
-              
-              <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
-                className="border p-2"
-              >
-                {seller.address}
+                {sellers.address}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {seller.PropertyId}
+                {sellers.PropertyId}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {seller.ListedPrice}
+                {sellers.ListedPrice}
               </TableCell>
+             
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
                 <Select
-                  value={seller.Status}
-                  onChange={(e) => handleStatusChange(seller._id, e.target.value)}
+                  value={sellers.status}
+                  variant="standard"
+                  onChange={(e) => handleStatusChange(sellers._id, e.target.value)}
                   className="border p-1 rounded"
                 >
                   <MenuItem value="Active">Active</MenuItem>
@@ -285,19 +339,19 @@ const SellerTable = () => {
                   <IconButton
                     sx={{ color: "blue" }}
                     fontweight="bolder"
-                    onClick={() => handleView(seller)}
+                    onClick={() => handleView(sellers)}
                   >
                     <Visibility />
                   </IconButton>
                   <IconButton
                     sx={{ color: "green" }}
-                    onClick={() => handleEdit(seller)}
+                    onClick={() => handleEdit(sellers)}
                   >
                     <Edit />
                   </IconButton>
                   <IconButton
                     sx={{ color: "red" }}
-                    onClick={() => handleDelete(seller)}
+                    onClick={() => handleDelete(sellers)}
                   >
                     <Delete />
                   </IconButton>
@@ -312,14 +366,14 @@ const SellerTable = () => {
       <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
         <Box sx={modalStyle}>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">seller Details</Typography>
+            <Typography variant="h6">sellers Details</Typography>
             <IconButton onClick={handleCloseViewModal}>
               <CloseIcon />
             </IconButton>
           </Box>
-          {selectedSeller && (
+          {selectedSellers && (
             <Grid container spacing={2} mt={2}>
-              {Object.entries(selectedSeller).map(([key, value]) => (
+              {Object.entries(selectedSellers).map(([key, value]) => (
                 <Grid item xs={6} key={key}>
                   <Typography>
                     <strong>{key}:</strong> {value}
@@ -332,43 +386,60 @@ const SellerTable = () => {
       </Modal>
 
       {/* Edit Modal */}
-      <Modal open={editModalOpen} onClose={handleCloseEditModal}>
-        <Box sx={modalStyle}>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">Edit seller</Typography>
-            <IconButton onClick={handleCloseEditModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Grid container spacing={2} mt={2}>
-            {Object.keys(editFormData).map((field) => (
-              <Grid item xs={6} key={field}>
-                <TextField
-                  label={field}
-                  value={editFormData[field] || ""}
-                  onChange={handleEditInputChange(field)}
-                  fullWidth
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
-              Update
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+    {/* Edit Modal */}
+<Modal open={editModalOpen} onClose={handleCloseEditModal}>
+  <Box sx={modalStyle}>
+    <Box display="flex" justifyContent="space-between">
+      <Typography variant="h6">Edit Seller</Typography>
+      <IconButton onClick={handleCloseEditModal}>
+        <CloseIcon />
+      </IconButton>
+    </Box>
+    <Grid container spacing={2} mt={2}>
+      {Object.keys(editFormData).map((field) => (
+        <Grid item xs={6} key={field}>
+          {field === "status" ? (
+  <FormControl fullWidth variant="standard">
+    <InputLabel>Status</InputLabel>
+    <Select
+      value={editFormData.status || ""}
+      onChange={handleEditInputChange("status")}
+      label="Status"
+    >
+      <MenuItem value="Active">Active</MenuItem>
+      <MenuItem value="Inactive">Inactive</MenuItem>
+    </Select>
+  </FormControl>
+) : (
+
+            <TextField
+              label={field}
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          )}
+        </Grid>
+      ))}
+    </Grid>
+    <Box display="flex" justifyContent="flex-end" mt={3}>
+      <Button variant="outlined" onClick={handleCloseEditModal}>
+        Cancel
+      </Button>
+      <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+        Update
+      </Button>
+    </Box>
+  </Box>
+</Modal>
 
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
           <Typography variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
-            Are you sure you want to delete this seller?
+            Are you sure you want to delete this sellers?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
             <Button variant="outlined" onClick={handleCloseDeleteModal}>
@@ -385,8 +456,18 @@ const SellerTable = () => {
         </Box>
       </Modal>
     </TableContainer>
+       <TablePagination
+      rowsPerPageOptions={[5, 10, 25]}
+      component="div"
+      count={sellers.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+    />
+    
     </>
   );
 };
 
-export default SellerTable;
+export default SellersTable;

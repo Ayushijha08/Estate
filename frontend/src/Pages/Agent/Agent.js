@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import {  InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import TablePagination from '@mui/material/TablePagination';
 
 import {
   Table,
@@ -12,6 +13,8 @@ import {
   TableRow,
   TableCell,
   IconButton,
+  FormControl,
+  InputLabel,
   Modal,
   Box,
   Typography,
@@ -75,13 +78,18 @@ const AgentTable = () => {
     width: 400,
     textAlign: "center",
   };
-
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedAgents, setSelectedAgents] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [agents, setAgents] = useState([]);
+  const [searchTerm,setSearchTerm]= useState("");
+    const [apiAgents,setApiAgents]=useState([]);
+  
 
   const getAllAgents = async () => {
     try {
@@ -89,6 +97,8 @@ const AgentTable = () => {
         `http://localhost:3001/agent/getAllAgents`      );
       console.log("response", res.data);
       setAgents(res.data);
+      setApiAgents(res.data);
+
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +132,37 @@ const AgentTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page
+  };
+  
+  const handleSearchChange = (e) => {
+    console.log("target", e.target);
+    
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
 
+    if (value === "") {
+        setAgents(apiAgents); // Reset to full list when search is empty
+        return;
+    }
+
+    const filtered = apiAgents.filter((Agents) => {
+      return (
+        Agents.name.toLowerCase().includes(value) ||   // propertyTitle = gfdgf.includes(gfdgf)
+        Agents.address.toLowerCase().includes(value) ||
+        Agents.email.toLowerCase().includes(value) ||
+        Agents.mobileNo.toString().toLowerCase().includes(value)
+      );
+    });
+
+    setAgents(filtered);
+};
   const handleUpdate = () => {
     console.log("Updating Agents:", editFormData);
     // Here you would typically make an API call to update the Agents
@@ -152,6 +192,9 @@ const AgentTable = () => {
        // fullWidth
       //  value={searchQuery}
        // onChange={handleSearchChange}
+       value={searchTerm}
+        onChange={handleSearchChange}
+        
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -227,8 +270,8 @@ const AgentTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          { agents.length>0 && agents.map((Agents) => (
-            <TableRow
+          { agents.length>0 && 
+agents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((Agents, index) => (            <TableRow
               key={Agents._id}
               className="text-center"
               sx={{ fontWeight: "bold" }}
@@ -353,35 +396,49 @@ const AgentTable = () => {
 
       {/* Edit Modal */}
       <Modal open={editModalOpen} onClose={handleCloseEditModal}>
-        <Box sx={modalStyle}>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">Edit Agents</Typography>
-            <IconButton onClick={handleCloseEditModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Grid container spacing={2} mt={2}>
-            {Object.keys(editFormData).map((field) => (
-              <Grid item xs={6} key={field}>
-                <TextField
-                  label={field}
-                  value={editFormData[field] || ""}
-                  onChange={handleEditInputChange(field)}
-                  fullWidth
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
-              Update
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+  <Box sx={modalStyle}>
+    <Box display="flex" justifyContent="space-between">
+      <Typography variant="h6">Edit Agents</Typography>
+      <IconButton onClick={handleCloseEditModal}>
+        <CloseIcon />
+      </IconButton>
+    </Box>
+    <Grid container spacing={2} mt={2}>
+      {Object.keys(editFormData).map((field) => (
+        <Grid item xs={6} key={field}>
+          {field === "status" ? (
+            <FormControl fullWidth>
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={editFormData[field] || ""}
+                onChange={handleEditInputChange(field)}
+                label="Status"
+              >
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="InActive">InActive</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            <TextField
+              label={field}
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+            />
+          )}
+        </Grid>
+      ))}
+    </Grid>
+    <Box display="flex" justifyContent="flex-end" mt={3}>
+      <Button variant="outlined" onClick={handleCloseEditModal}>
+        Cancel
+      </Button>
+      <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+        Update
+      </Button>
+    </Box>
+  </Box>
+</Modal>
 
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
@@ -405,6 +462,16 @@ const AgentTable = () => {
         </Box>
       </Modal>
     </TableContainer>
+    <TablePagination
+      rowsPerPageOptions={[5, 10, 25]}
+      component="div"
+      count={agents.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+    />
+    
     </>
   );
 };

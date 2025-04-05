@@ -8,7 +8,7 @@ const FinanceSchema = new Schema({
         required: true,  
     },
     Amount: {
-        type: Number,
+        type: String,
         required: true,  
         min: 0,          
     },
@@ -27,7 +27,7 @@ const FinanceSchema = new Schema({
         required: true,  
     },
     transactionDate: {
-        type: Date,
+        type: String,
         required: true,  
     },
     status: {

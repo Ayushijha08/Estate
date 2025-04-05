@@ -230,7 +230,7 @@ const FinanceTable = () => {
 
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1250 }}
+      style={{ overflowX: "auto", maxWidth: 1250,whiteSpace:"nowrap" }}
     >
       <Table className="w-full border border-gray-300">
         <TableHead
@@ -254,17 +254,17 @@ const FinanceTable = () => {
             Amount
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            transactionType
+            Transaction Type
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            category
+            Category
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            paymentMode
+            Payment Mode
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              {" "}
-              transactionDate
+            
+              Transaction Date
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
@@ -397,7 +397,9 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
       <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
         <Box sx={modalStyle}>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">finances Details</Typography>
+            <Typography 
+                      className="confirm_delete"
+                      variant="h6">Finances Details</Typography>
             <IconButton onClick={handleCloseViewModal}>
               <CloseIcon />
             </IconButton>
@@ -493,7 +495,9 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
-          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography 
+           className="confirm_delete"
+          variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
             Are you sure you want to delete this finances?
           </Typography>

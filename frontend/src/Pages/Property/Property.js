@@ -535,7 +535,10 @@ properties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
-          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography 
+                    className="confirm_delete"
+
+          variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
             Are you sure you want to delete this property?
           </Typography>

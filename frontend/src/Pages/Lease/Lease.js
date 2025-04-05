@@ -229,7 +229,7 @@ const LeaseTable = () => {
               S.No
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-          Name
+           Name
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
             email
@@ -245,16 +245,16 @@ const LeaseTable = () => {
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               {" "}
-              LeaseEndDate
+              Lease End Date
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            MonthlyRent
+            Monthly Rent
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            SecurityDeposit
+            Security Deposit
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            paymentStatus
+            payment Status
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
             LeaseStatus
@@ -483,7 +483,9 @@ const LeaseTable = () => {
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
-          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography 
+                    className="confirm_delete"
+          variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
             Are you sure you want to delete this lease?
           </Typography>

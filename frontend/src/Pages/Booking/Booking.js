@@ -470,13 +470,16 @@ const BookingTable = () => {
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
-          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography 
+                    className="confirm_delete"
+
+          variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
             Are you sure you want to delete this booking?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
             <Button variant="outlined" onClick={handleCloseDeleteModal}>
-              CANCLE
+              CANCEL
             </Button>
             <Button
               variant="contained"

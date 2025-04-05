@@ -240,7 +240,7 @@ const BuyersTable = () => {
               E-mail
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              mobile No
+              Mobile No
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Address
@@ -422,7 +422,9 @@ buyers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((buyer, i
       {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
-          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography 
+                    className="confirm_delete"
+                    variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
             Are you sure you want to delete this buyer?
           </Typography>

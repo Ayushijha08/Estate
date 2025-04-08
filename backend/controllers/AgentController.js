@@ -60,6 +60,7 @@ export const updateAgent = async (req, res) => {
         );
 
         res.json({
+            success:true,
             message: 'Agent updated successfully',
             Agent: updatedAgent
         });
@@ -75,7 +76,9 @@ export const deleteAgent = async (req, res) => {
         if (!deletedAgent) {
             return res.status(404).json({ message: 'Agent not found' });
         }
-        res.json({ message: 'Agent deleted successfully' });
+        res.json({ 
+            success:true,
+            message: 'Agent deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

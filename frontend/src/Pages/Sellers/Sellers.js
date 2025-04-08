@@ -31,21 +31,9 @@ import {
 import TablePagination from "@mui/material/TablePagination";
 
 import axios from "axios";
+import { toast } from "react-toastify";
 const SellersTable = () => {
-  const [data, setData] = useState([
-    {
-      // name, email, mobileNo, address, PropertyId, ListedPrice, Status
-      id: 1,
-      name: "Luxury",
-      email: "Apartment",
-      mobileNo: "121324",
-      address: "Ranchi",
-      PropertyId: "423",
-      ListedPrice: "5",
-      status: "Active",
-    },
-  ]);
-
+ 
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -157,12 +145,25 @@ const SellersTable = () => {
     handleCloseEditModal();
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Deleting sellers:", selectedSellers);
-    // Here you would typically make an API call to delete the sellers
+  const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
+    try{
+      const res = await axios.delete(`http://localhost:3001/Sellers/deleteSeller/${selectedSellers._id}`);
+      if(res.data.success){
+        toast.success(res.data.message);
+        getAllsellers()
+      }
+
+    }
+    catch(error)
+    {
+   console.log(error);
+   toast.error()
+   toast.error(error.response.data.message);
+    }
+
   };
-  const handleStatusChange = (id, newStatus) => {
+ const handleStatusChange = (id, newStatus) => {
     setSellers((prevSellers) =>
       prevSellers.map((seller) =>
         seller._id === id ? { ...seller, status: newStatus } : seller
@@ -271,7 +272,7 @@ const SellersTable = () => {
             {sellers.length > 0 &&
               sellers
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // ✅ Apply pagination here
-                .map((sellers) => (
+                .map((sellers,index) => (
                   <TableRow
                     key={sellers._id}
                     className="text-center"
@@ -285,7 +286,7 @@ const SellersTable = () => {
                       }}
                       className="border p-2"
                     >
-                      {sellers._id}
+                      {index+1}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -357,7 +358,7 @@ const SellersTable = () => {
                       className="border p-2"
                     >
                       <Select
-                        value={sellers.status}
+                        value={sellers.Status}
                         variant="standard"
                         onChange={(e) =>
                           handleStatusChange(sellers._id, e.target.value)
@@ -439,7 +440,9 @@ const SellersTable = () => {
               </IconButton>
             </Box>
             <Grid container spacing={2} mt={2}>
-              {Object.keys(editFormData).map((field) => (
+              {Object.keys(editFormData)
+            .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+              .map((field) => (
                 <Grid item xs={6} key={field}>
                   {field === "status" ? (
                     <FormControl fullWidth variant="standard">

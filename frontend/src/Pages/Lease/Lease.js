@@ -5,50 +5,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 
 import {
-  Table,
-  Select,
-  MenuItem,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  IconButton,
-  Modal,
-  Box,
-  Typography,
-  Paper,
-  Grid,
-  TextField,
-  Button,
-  TableContainer,
-} from "@mui/material";
-import {
-  Visibility,
-  Edit,
-  Delete,
-  Close as CloseIcon,
-} from "@mui/icons-material";
+  Table, Select,MenuItem, TableHead,  TableBody, TableRow, TableCell,IconButton,Modal, Box,  Typography,Paper,Grid, TextField,Button,TableContainer,} from "@mui/material";
+import {Visibility, Edit,Delete, Close as CloseIcon,} from "@mui/icons-material";
 import axios from "axios";
+import { toast } from "react-toastify";
 const LeaseTable = () => {
-  const [data, setData] = useState([
-    {
-
-      id: 1,
-      name: "Luxury",
-      email: "Apartment",
-      mobileNo: 999,
-      address: "yu",
-      LeaseStartDate: 7687,
-      LeaseEndDate: 8,
-      MonthlyRent: "Active",
-      SecurityDeposit:75,
-      paymentStatus:"686",
-      LeaseStatus:"eqw"
-
-    },
-   
-  ]);
-
+  
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -162,15 +124,27 @@ const LeaseTable = () => {
     handleCloseEditModal();
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Deleting lease:", selectedLease);
-    // Here you would typically make an API call to delete the lease
+  const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
-  };
-  const handleStatusChange = (id, newStatus) => {
-    setData((prevData) =>
-      prevData.map((row) =>
-        row.id === id ? { ...row, status: newStatus } : row
+    try{
+      const res = await axios.delete(`http://localhost:3001/lease/deleteLease/${selectedLease._id}`);
+      if(res.data.success){
+        toast.success(res.data.message);
+        getAllLease()
+      }
+
+    }
+    catch(error)
+    {
+   console.log(error);
+   toast.error()
+   toast.error(error.response.data.message);
+    }
+
+  };const handleStatusChange = (id, newStatus) => {
+    setLease((prev) =>
+      prev.map((lease) =>
+        lease.id === id ? { ...lease, status: newStatus } : lease
       )
     );
   };
@@ -277,7 +251,7 @@ const LeaseTable = () => {
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {lease._id}
+                {index+1}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
@@ -413,7 +387,7 @@ const LeaseTable = () => {
         </Box>
       </Modal>
 
-      {/* Edit Modal */}
+      
       {/* Edit Modal */}
 <Modal open={editModalOpen} onClose={handleCloseEditModal}>
   <Box sx={modalStyle}>
@@ -425,7 +399,10 @@ const LeaseTable = () => {
     </Box>
 
     <Grid container spacing={2} mt={2}>
-      {Object.keys(editFormData).map((field) => (
+      {Object.keys(editFormData)
+                    .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+
+      .map((field) => (
         <Grid item xs={6} key={field}>
           {/* Payment Status Dropdown */}
           {field === "paymentStatus" ? (

@@ -75,7 +75,9 @@ export const deleteLease = async (req, res) => {
         if (!deletedLease) {
             return res.status(404).json({ message: 'Lease not found' });
         }
-        res.json({ message: 'Lease deleted successfully' });
+        res.json({ 
+            success:true,
+            message: 'Lease deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

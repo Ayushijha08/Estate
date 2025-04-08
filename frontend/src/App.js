@@ -9,10 +9,13 @@ import LayoutBuyers from "./Layout/LayoutBuyers";
 import LayoutLease from "./Layout/LayoutLease";
 import LayoutFinance from "./Layout/LayoutFinance";
 import LayoutSellers from "./Layout/LayoutSellers";
+import {ToastContainer} from "react-toastify"
 
 function App() {
   return (
+    
     <BrowserRouter>
+    <ToastContainer />
       <Routes>
 
         <Route path="/sign-up" element={<SignUp />}/>

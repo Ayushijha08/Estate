@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import TablePagination from '@mui/material/TablePagination';
 
-import {  InputAdornment } from '@mui/material';
+import {  FormControl, InputAdornment, InputLabel } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { Table, Select, MenuItem,TableHead,TableBody,TableRow,TableCell, IconButton,Modal, Box, Typography,  Paper,Grid,TextField,Button, TableContainer,} from "@mui/material";
@@ -12,38 +12,8 @@ import {
   Delete, Close as CloseIcon,
 } from "@mui/icons-material";
 import axios from "axios";
+import { toast } from "react-toastify";
 const BookingTable = () => {
-  const [data, setData] = useState([
-    {
-      
-        id: 1,
-        name: "Luxury",
-        email: "Apartment",
-        mobileNo:"121324",
-        address: "Ranchi",
-        check_in_date:"423",
-        check_out_date:"5",
-        TotalAmountUnit:"546",
-        paymentStatus: "Active",
-        Bookingstatus:"pending"
-      
-    },
-    {
-      id: 2,
-      name: "Luxury",
-      email: "Apartment",
-      mobileNo:"121324",
-      address: "Ranchi",
-      check_in_date:"423",
-      check_out_date:"5",
-      TotalAmountUnit:"546",
-      paymentStatus: "Active",
-      Bookingstatus:"pending"
-    
-    },
-    
-  ]);
-
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -104,6 +74,7 @@ const BookingTable = () => {
     setEditFormData(booking);
     setEditModalOpen(true);
   };
+    
 
   const handleDelete = (booking) => {
     setselectedBooking(booking);
@@ -158,17 +129,23 @@ const BookingTable = () => {
     handleCloseEditModal();
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Deleting booking:", selectedBooking);
-    // Here you would typically make an API call to delete the booking
+  const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
-  };
-  const handleStatusChange = (id, newStatus) => {
-    setData((prevData) =>
-      prevData.map((row) =>
-        row.id === id ? { ...row, status: newStatus } : row
-      )
-    );
+    try{
+      const res = await axios.delete(`http://localhost:3001/booking/deleteBooking/${selectedBooking._id}`);
+      if(res.data.success){
+        toast.success(res.data.message);
+       getAllbooking()
+      }
+
+    }
+    catch(error)
+    {
+   console.log(error);
+   toast.error()
+   toast.error(error.response.data.message);
+    }
+
   };
   return (
     <>
@@ -261,7 +238,7 @@ const BookingTable = () => {
         </TableHead>
         <TableBody>
           { bookings.length>0 && bookings.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // ✅ Apply pagination here
-      .map((booking) => (            <TableRow
+      .map((booking,index) => (            <TableRow
               key={booking._id}
               className="text-center"
               sx={{ fontWeight: "bold" }}
@@ -270,7 +247,7 @@ const BookingTable = () => {
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {booking._id}
+                {index+1}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
@@ -317,31 +294,42 @@ const BookingTable = () => {
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >
-                <Select
-                variant="standard"
-    value={booking.paymentStatus}
-    onChange={(e) => handleStatusChange(booking._id, "paymentStatus", e.target.value)}
-    className="border p-1 rounded"
-  >
-    <MenuItem value="Pending">Pending</MenuItem>
-    <MenuItem value="Completed">Completed</MenuItem>
-    <MenuItem value="Failed">Failed</MenuItem>
-  </Select>
+              >  <Select
+              value={booking.paymentStatus}
+              onChange={(e) => {
+                const updatedBookings = [...bookings];
+                updatedBookings[index].paymentStatus = e.target.value;
+                setBookings(updatedBookings);
+              }}
+              size="small"
+              variant="standard"
+              fullWidth
+            >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
+              <MenuItem value="Failed">Failed</MenuItem>
+            </Select>
+          
+            
 </TableCell>
 
 <TableCell sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }} className="border p-2">
-  <Select
+<Select
     value={booking.Bookingstatus}
+    onChange={(e) => {
+      const updatedBookings = [...bookings];
+      updatedBookings[index].Bookingstatus = e.target.value;
+      setBookings(updatedBookings);
+    }}
+    size="small"
     variant="standard"
-
-    onChange={(e) => handleStatusChange(booking._id, "Bookingstatus", e.target.value)}
-    className="border p-1 rounded"
+    fullWidth
   >
+    <MenuItem value="Pending">Pending</MenuItem>
     <MenuItem value="Confirmed">Confirmed</MenuItem>
     <MenuItem value="Cancelled">Cancelled</MenuItem>
-    <MenuItem value="Completed">Completed</MenuItem>
   </Select>
+  
 </TableCell>
               <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
                 <TableContainer
@@ -411,40 +399,45 @@ const BookingTable = () => {
     </Box>
 
     <Grid container spacing={2} mt={2}>
-      {Object.keys(editFormData).map((field) => (
-        <Grid item xs={6} key={field}>
-          {/* Dropdown for Payment Status */}
-          {field === "paymentStatus" ? (
-            <Select
-              fullWidth
-              variant="standard"
+      {Object.keys(editFormData)
+                    .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
 
+      .map((field) => (
+        <Grid item xs={6} key={field}>
+          {field === "paymentStatus" ? (
+            <FormControl fullWidth>
+              <InputLabel>  payment Status</InputLabel>
+            <Select
               value={editFormData[field] || ""}
-              onChange={(e) => handleEditInputChange(field)(e)}
+              onChange={handleEditInputChange(field)}
+              fullWidth
               displayEmpty
+              variant="standard"
             >
               <MenuItem value="" disabled>Select Payment Status</MenuItem>
+              <MenuItem value="Active">Active</MenuItem>
               <MenuItem value="Pending">Pending</MenuItem>
-              <MenuItem value="Completed">Completed</MenuItem>
               <MenuItem value="Failed">Failed</MenuItem>
             </Select>
+            </FormControl>
           ) : field === "Bookingstatus" ? (
+            <FormControl fullWidth>
+              <InputLabel>  Booking Status</InputLabel>
             
             <Select
-              fullWidth
-              variant="standard"
-
               value={editFormData[field] || ""}
-              onChange={(e) => handleEditInputChange(field)(e)}
+              onChange={handleEditInputChange(field)}
+              fullWidth
               displayEmpty
+              variant="standard"
             >
               <MenuItem value="" disabled>Select Booking Status</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
               <MenuItem value="Confirmed">Confirmed</MenuItem>
               <MenuItem value="Cancelled">Cancelled</MenuItem>
-              <MenuItem value="Completed">Completed</MenuItem>
             </Select>
+            </FormControl>
           ) : (
-            /* Default TextField for other fields */
             <TextField
               label={field}
               value={editFormData[field] || ""}
@@ -466,8 +459,7 @@ const BookingTable = () => {
     </Box>
   </Box>
 </Modal>
-
-      {/* Delete Modal */}
+    {/* Delete Modal */}
       <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
           <Typography 

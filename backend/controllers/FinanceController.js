@@ -75,7 +75,9 @@ export const deleteFinance = async (req, res) => {
         if (!deletedFinance) {
             return res.status(404).json({ message: 'Finance not found' });
         }
-        res.json({ message: 'Finance deleted successfully' });
+        res.json({ 
+            success:true,
+            message: 'Finance deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

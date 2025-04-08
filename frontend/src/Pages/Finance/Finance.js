@@ -32,21 +32,9 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 import axios from "axios";
+import { toast } from "react-toastify";
 const FinanceTable = () => {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "Luxury",
-      Amount: "Apartment",
-      transactionType:"121324",
-      category: "Ranchi",
-      paymentMode:"423",
-      transactionDate:"5",
-      status: "Active",
-    },
-    
-  ]);
-
+ 
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -184,11 +172,25 @@ const FinanceTable = () => {
     handleCloseEditModal();
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Deleting finances:", selectedFinance);
-    // Here you would typically make an API call to delete the finances
+  const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
+    try{
+      const res = await axios.delete(`http://localhost:3001/finance/deleteFinance/${selectedFinance._id}`);
+      if(res.data.success){
+        toast.success(res.data.message);
+        getAllfinances()
+      }
+
+    }
+    catch(error)
+    {
+   console.log(error);
+   toast.error()
+   toast.error(error.response.data.message);
+    }
+
   };
+
   return (
     <>
     <div className='flex'>
@@ -245,7 +247,7 @@ const FinanceTable = () => {
 
           <TableRow className="bg-gray-200">
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              ID
+              S. NO.
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Name
@@ -286,7 +288,7 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {finances._id}
+                {index +1}
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
@@ -428,7 +430,10 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
             </IconButton>
           </Box>
           <Grid container spacing={2} mt={2}>
-  {Object.keys(editFormData).map((field) => (
+  {Object.keys(editFormData)
+     .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+
+  .map((field) => (
     <Grid item xs={6} key={field}>
       {field === "transactionType" ? (
         <FormControl fullWidth>

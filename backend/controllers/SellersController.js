@@ -75,7 +75,9 @@ export const deleteSeller = async (req, res) => {
         if (!deletedSeller) {
             return res.status(404).json({ message: 'Seller not found' });
         }
-        res.json({ message: 'Seller deleted successfully' });
+        res.json({ 
+            success:true,
+            message: 'Seller deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

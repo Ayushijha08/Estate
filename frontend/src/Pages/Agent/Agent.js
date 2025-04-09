@@ -47,6 +47,19 @@ const AgentTable = () => {
   const [editFormData, setEditFormData] = useState({});
   const [agents, setAgents] = useState([]);
   const [searchTerm,setSearchTerm]= useState("");
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addFormData, setAddFormData] = useState({
+    name: '',
+    email: '',
+    mobileNo: '',
+    address: '',
+    licenseNo: '',
+    experience: '',
+    commissionRate: '',
+     status: 'Active',
+      });
+     
+
     const [apiAgents,setApiAgents]=useState([]);
   
 
@@ -80,10 +93,14 @@ const AgentTable = () => {
     setSelectedAgents(Agents);
     setDeleteModalOpen(true);
   };
+  const handleAddNew = () => {
+    setAddModalOpen(true);
+  };
 
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
+  const handleCloseAddModal = () => setAddModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
     setEditFormData({
@@ -91,6 +108,38 @@ const AgentTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleAddInputChange = (field) => (event) => {
+        setAddFormData({
+          ...addFormData,
+          [field]: event.target.value,
+        });
+      };
+    
+      const handleAddAgent = async () => {
+        try {
+          const response = await axios.post('http://localhost:3001/agent/createAgent', addFormData);
+          if (response.data.success) {
+            toast.success('Agents added successfully!');
+            handleCloseAddModal();
+            getAllAgents();
+            // Reset form data
+            setAddFormData({
+              name: '',
+              email: '',
+              mobileNo: '',
+              address: '',
+              licenseNo: '',
+              experience: '',
+              commissionRate: '',
+               status: 'Active',
+                     });
+          }
+        } catch (error) {
+          console.error('Error adding Agents:', error);
+          toast.error(error.response?.data?.message || 'Failed to add Agents');
+        }
+      };
+    
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -181,7 +230,7 @@ const AgentTable = () => {
     <Button 
     variant="contained" 
    // color="primary" 
- //onClick={handleAddNew}
+ onClick={handleAddNew}
  style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
@@ -377,7 +426,7 @@ agents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((Agents, 
     </Box>
     <Grid container spacing={2} mt={2}>
       {Object.keys(editFormData)
-           .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+           .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
 
       .map((field) => (
         <Grid item xs={6} key={field}>
@@ -438,6 +487,129 @@ agents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((Agents, 
           </Box>
         </Box>
       </Modal>
+       <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+                      <Box sx={modalStyle}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                          <Typography variant="h6" fontWeight="bold">Add New Buyer</Typography>
+                          <IconButton onClick={handleCloseAddModal}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Box>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Name"
+                              name="name"
+                              value={addFormData.name}
+                              onChange={handleAddInputChange('name')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="E-mail"
+                              name="email"
+                              value={addFormData.email}
+                              onChange={handleAddInputChange('email')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Mobile No"
+                              name="mobileNo"
+                              value={addFormData.mobileNo}
+                              onChange={handleAddInputChange('mobileNo')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Address"
+                              name="address"
+                              value={addFormData.address}
+                              onChange={handleAddInputChange('address')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="license No"
+                              name="licenseNo"
+                             // type="number"
+                              value={addFormData.licenseNo}
+                              onChange={handleAddInputChange('licenseNo')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="experience"
+                              name="experience"
+                             // type="number"
+                              value={addFormData.experience}
+                              onChange={handleAddInputChange('experience')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="commission Rate"
+                              name="commissionRate"
+                             // type="number"
+                              value={addFormData.commissionRate}
+                              onChange={handleAddInputChange('commissionRate')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="furnishing-label">Status</InputLabel>
+                              <Select
+                                labelId="furnishing-label"
+                                name="status"
+                                value={addFormData.status}
+                                onChange={handleAddInputChange('status')}
+                                required
+                                
+                              >
+                                 <MenuItem value="Active">Active</MenuItem>
+                              <MenuItem value="Inactive">Inactive</MenuItem>
+                             </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Box display="flex" justifyContent="flex-end" gap={2}>
+                              <Button 
+                                variant="outlined" 
+                                onClick={handleCloseAddModal}
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                variant="contained" 
+                                color="primary"
+                                onClick={handleAddAgent}
+                              >
+                                Save Agent
+                              </Button>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Modal>
+            
     </TableContainer>
     <TablePagination
       rowsPerPageOptions={[5, 10, 25]}

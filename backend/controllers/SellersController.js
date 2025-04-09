@@ -10,6 +10,7 @@ export const createSeller = async (req, res) => {
 
         await Sellers.create({ name, email, mobileNo, address, PropertyId, ListedPrice, Status}) 
         res.status(201).json({
+           success:true,
             message: 'Seller created successfully'
         });
     } catch (error) {

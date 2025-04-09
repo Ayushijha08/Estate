@@ -9,6 +9,7 @@ if (!name || !Amount || !transactionType ||  !category||  !paymentMode ||  !tran
 
         await Finance.create({ name, Amount, transactionType, category, paymentMode, transactionDate, status}) 
         res.status(201).json({
+           success:true,
             message: 'Finance created successfully'
         });
     } catch (error) {

@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 
 import {
-  Table, Select,MenuItem, TableHead,  TableBody, TableRow, TableCell,IconButton,Modal, Box,  Typography,Paper,Grid, TextField,Button,TableContainer,} from "@mui/material";
+  Table, Select,MenuItem, TableHead,  TableBody, TableRow, FormControl,InputLabel,TableCell,IconButton,Modal, Box,  Typography,Paper,Grid, TextField,Button,TableContainer,} from "@mui/material";
 import {Visibility, Edit,Delete, Close as CloseIcon,} from "@mui/icons-material";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -38,7 +38,22 @@ const LeaseTable = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedLease, setSelectedLease] = useState(null);
+        const [addModalOpen, setAddModalOpen] = useState(false);
+  
   const [editFormData, setEditFormData] = useState({});
+  const [addFormData, setAddFormData] = useState({
+    name: '',
+    email: '',
+    mobileNo: '',
+    address: '',
+    LeaseStartDate: '',
+    LeaseEndDate: '',
+    MonthlyRent: '',
+    SecurityDeposit: '',
+    paymentStatus: '',
+    LeaseStatus: '',
+      });
+  
   const [Lease, setLease] = useState([]);
   const [searchTerm,setSearchTerm]= useState("");
   const [apiLease,setApiLease]=useState([]);
@@ -74,10 +89,15 @@ const LeaseTable = () => {
     setSelectedLease(lease);
     setDeleteModalOpen(true);
   };
+  const handleAddNew = () => {
+    setAddModalOpen(true);
+  };
+
 
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
+  const handleCloseAddModal = () => setAddModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
     setEditFormData({
@@ -85,6 +105,41 @@ const LeaseTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleAddInputChange = (field) => (event) => {
+      setAddFormData({
+        ...addFormData,
+        [field]: event.target.value,
+      });
+    };
+  
+    const handleAddLease = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/lease/createLease', addFormData);
+        if (response.data.success) {
+          toast.success('Lease added successfully!');
+          handleCloseAddModal();
+          getAllLease();
+          // Reset form data
+          setAddFormData({
+            name: '',
+            email: '',
+            mobileNo: '',
+            address: '',
+            LeaseStartDate: '',
+            LeaseEndDate: '',
+            MonthlyRent: '',
+            SecurityDeposit: '',
+            paymentStatus: '',
+    LeaseStatus: '',
+          });
+        }
+      } catch (error) {
+        console.error('Error adding Lease:', error);
+        toast.error(error.response?.data?.message || 'Failed to add Lease');
+      }
+    };
+  
+  
   const handleSearchChange = (e) => {
     console.log("target", e.target);
     
@@ -176,7 +231,7 @@ const LeaseTable = () => {
     <Button 
     variant="contained" 
    // color="primary" 
- //onClick={handleAddNew}
+ onClick={handleAddNew}
  style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
@@ -400,7 +455,7 @@ const LeaseTable = () => {
 
     <Grid container spacing={2} mt={2}>
       {Object.keys(editFormData)
-                    .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+                    .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
 
       .map((field) => (
         <Grid item xs={6} key={field}>
@@ -414,10 +469,10 @@ const LeaseTable = () => {
               displayEmpty
             >
               <MenuItem value="" disabled>Select Payment Status</MenuItem>
-              <MenuItem value="Pending">Pending</MenuItem>
-              <MenuItem value="Completed">Completed</MenuItem>
-              <MenuItem value="Failed">Failed</MenuItem>
-            </Select>
+              <MenuItem value="Paid">Paid</MenuItem>
+            <MenuItem value="Unpaid">Unpaid</MenuItem>
+            <MenuItem value="Partial">Partial</MenuItem>
+         </Select>
           ) : field === "LeaseStatus" ? (
             /* Lease Status Dropdown */
             <Select
@@ -480,6 +535,160 @@ const LeaseTable = () => {
           </Box>
         </Box>
       </Modal>
+              <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+                      <Box sx={modalStyle}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                          <Typography variant="h6" fontWeight="bold">Add New Lease</Typography>
+                          <IconButton onClick={handleCloseAddModal}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Box>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Name"
+                              name="name"
+                              value={addFormData.name}
+                              onChange={handleAddInputChange('name')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="E-mail"
+                              name="email"
+                              value={addFormData.email}
+                              onChange={handleAddInputChange('email')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Mobile No"
+                              name="mobileNo"
+                              value={addFormData.mobileNo}
+                              onChange={handleAddInputChange('mobileNo')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Address"
+                              name="address"
+                              value={addFormData.address}
+                              onChange={handleAddInputChange('address')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="LeaseStartDate"
+                              name="LeaseStartDate"
+                             // type="number"
+                              value={addFormData.LeaseStartDate}
+                              onChange={handleAddInputChange('LeaseStartDate')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label=" LeaseEndDate"
+                              name="LeaseEndDate"
+                             // type="number"
+                              value={addFormData.LeaseEndDate}
+                              onChange={handleAddInputChange('LeaseEndDate')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label=" MonthlyRent"
+                              name="MonthlyRent"
+                             // type="number"
+                              value={addFormData.MonthlyRent}
+                              onChange={handleAddInputChange('MonthlyRent')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label=" SecurityDeposit"
+                              name="SecurityDeposit"
+                             // type="number"
+                              value={addFormData.SecurityDeposit}
+                              onChange={handleAddInputChange('SecurityDeposit')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="furnishing-label">paymentStatus</InputLabel>
+                              <Select
+                               // labelId="furnishing-label"
+                                name="paymentStatus"
+                                value={addFormData.paymentStatus}
+                                onChange={handleAddInputChange('paymentStatus')}
+                                required
+                                
+                              >
+                                <MenuItem value="" disabled>Select Payment Status</MenuItem>
+                                <MenuItem value="Paid">Paid</MenuItem>
+            <MenuItem value="Unpaid">Unpaid</MenuItem>
+            <MenuItem value="Partial">Partial</MenuItem>
+         </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="furnishing-label">LeaseStatus</InputLabel>
+                              <Select
+                                labelId="furnishing-label"
+                                name="LeaseStatus"
+                                value={addFormData.LeaseStatus}
+                                onChange={handleAddInputChange('LeaseStatus')}
+                                required
+                                
+                              >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Expired">Expired</MenuItem>
+              <MenuItem value="Terminated">Terminated</MenuItem>
+            </Select>
+                            </FormControl>
+                          </Grid>
+                        
+                          <Grid item xs={12}>
+                            <Box display="flex" justifyContent="flex-end" gap={2}>
+                              <Button 
+                                variant="outlined" 
+                                onClick={handleCloseAddModal}
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                variant="contained" 
+                                color="primary"
+                                onClick={handleAddLease}
+                              >
+                                Save Lease
+                              </Button>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Modal>
+            
     </TableContainer>
      <TablePagination
       rowsPerPageOptions={[5, 10, 25]}

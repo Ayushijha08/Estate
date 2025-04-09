@@ -170,4 +170,8 @@ body{
      .confirm_delete{
       font-weight: 700 !important;
      }
-      
+      .heading{
+        font-size:medium;
+        font-weight:500 ;
+        white-space:noWrap;
+      }

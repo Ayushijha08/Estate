@@ -7,6 +7,8 @@ import TablePagination from "@mui/material/TablePagination";
 import {Table,Select,MenuItem,TableHead,TableBody,TableRow,TableCell,IconButton, Modal,Box,Typography,FormControl,InputLabel, Paper,Grid, TextField, Button,TableContainer} from "@mui/material";
 import {Visibility, Edit, Delete,Close as CloseIcon,} from "@mui/icons-material";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 import { toast } from "react-toastify";
 const PropertyTable = () => {
  
@@ -36,11 +38,24 @@ const PropertyTable = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [addModalOpen, setAddModalOpen] = useState(false);
+  
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [editFormData, setEditFormData] = useState({});
+   const [addFormData, setAddFormData] = useState({
+      propertyTitle: '',
+      propertyType: '',
+      address: '',
+      price: '',
+      areaSqft: '',
+      furnishing: '',
+      status: 'Available',
+    });
+   
   const [properties, setProperties] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [apiProperties, setApiProperties] = useState([]);
+  const navigate = useNavigate();
 
   const getAllProperty = async () => {
     try {
@@ -72,9 +87,14 @@ const PropertyTable = () => {
     setSelectedProperty(property);
     setDeleteModalOpen(true);
   };
+  const handleAddNew = () => {
+    setAddModalOpen(true);
+  };
 
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
+  const handleCloseAddModal = () => setAddModalOpen(false);
+
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
@@ -83,6 +103,38 @@ const PropertyTable = () => {
       [field]: event.target.value,
     });
   };
+
+  const handleAddInputChange = (field) => (event) => {
+      setAddFormData({
+        ...addFormData,
+        [field]: event.target.value,
+      });
+    };
+  
+    const handleAddProperty = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/property/createProperty', addFormData);
+        if (response.data.success) {
+          toast.success('Property added successfully!');
+          handleCloseAddModal();
+          getAllProperty();
+          // Reset form data
+          setAddFormData({
+            propertyTitle: '',
+            propertyType: '',
+            address: '',
+            price: '',
+            areaSqft: '',
+            furnishing: '',
+            status: 'Available',
+          });
+        }
+      } catch (error) {
+        console.error('Error adding property:', error);
+        toast.error(error.response?.data?.message || 'Failed to add property');
+      }
+    };
+    
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -202,7 +254,7 @@ const PropertyTable = () => {
           variant="contained"
           startIcon={<AddIcon />}
           // color="primary"
-          //onClick={handleAddNew}
+          onClick={handleAddNew}
           style={{
             marginBottom: "20px",
             textWrap: "nowrap",
@@ -295,6 +347,7 @@ const PropertyTable = () => {
                       }}
                       className="border p-2"
                     >
+                      
                       <Select
                         value={property.propertyTitle}
                         variant="standard"
@@ -475,7 +528,7 @@ const PropertyTable = () => {
             </Box>
             <Grid container spacing={2} mt={2}>
               {Object.keys(editFormData)
-              .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+              .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
 
               .map((field) => (
                 <Grid item xs={6} key={field}>
@@ -585,6 +638,136 @@ const PropertyTable = () => {
             </Box>
           </Box>
         </Modal>
+         <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+                <Box sx={modalStyle}>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="h6" fontWeight="bold">Add New Property</Typography>
+                    <IconButton onClick={handleCloseAddModal}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="property-title-label">Property Title</InputLabel>
+                        <Select
+                          labelId="property-title-label"
+                          name="propertyTitle"
+                          value={addFormData.propertyTitle}
+                          onChange={handleAddInputChange('propertyTitle')}
+                          required
+                        >
+                          <MenuItem value="Luxury">Luxury</MenuItem>
+                          <MenuItem value="3BHK">3BHK</MenuItem>
+                          <MenuItem value="Apartment">Apartment</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="property-type-label">Property Type</InputLabel>
+                        <Select
+                          labelId="property-type-label"
+                          name="propertyType"
+                          value={addFormData.propertyType}
+                          onChange={handleAddInputChange('propertyType')}
+                          required
+                        >
+                          <MenuItem value="Apartment">Apartment</MenuItem>
+                          <MenuItem value="House">House</MenuItem>
+                          <MenuItem value="Commercial">Commercial</MenuItem>
+                          <MenuItem value="Land">Land</MenuItem>
+                          <MenuItem value="Office">Office</MenuItem>
+                          <MenuItem value="Villa">Villa</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Address"
+                        name="address"
+                        value={addFormData.address}
+                        onChange={handleAddInputChange('address')}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Price"
+                        name="price"
+                        type="number"
+                        value={addFormData.price}
+                        onChange={handleAddInputChange('price')}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Area (Sqft)"
+                        name="areaSqft"
+                        type="number"
+                        value={addFormData.areaSqft}
+                        onChange={handleAddInputChange('areaSqft')}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="furnishing-label">Furnishing</InputLabel>
+                        <Select
+                          labelId="furnishing-label"
+                          name="furnishing"
+                          value={addFormData.furnishing}
+                          onChange={handleAddInputChange('furnishing')}
+                          required
+                          
+                        >
+                          <MenuItem value="Furnished">Furnished</MenuItem>
+                          <MenuItem value="Semi-Furnished">Semi-Furnished</MenuItem>
+                          <MenuItem value="Unfurnished">Unfurnished</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="status-label">Status</InputLabel>
+                        <Select
+                          labelId="status-label"
+                          name="status"
+                          value={addFormData.status}
+                          onChange={handleAddInputChange('status')}
+                          required
+                        >
+                          <MenuItem value="Available">Available</MenuItem>
+                          <MenuItem value="Sold">Sold</MenuItem>
+                          <MenuItem value="Rented">Rented</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Box display="flex" justifyContent="flex-end" gap={2}>
+                        <Button 
+                          variant="outlined" 
+                          onClick={handleCloseAddModal}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          variant="contained" 
+                          color="primary"
+                          onClick={handleAddProperty}
+                        >
+                          Save Property
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Modal>
+        
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

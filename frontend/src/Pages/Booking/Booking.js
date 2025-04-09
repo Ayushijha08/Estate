@@ -43,9 +43,24 @@ const BookingTable = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedBooking, setselectedBooking] = useState(null);
   const [editFormData, setEditFormData] = useState({});
+  const [addFormData, setAddFormData] = useState({
+    name: '',
+    email: '',
+    mobileNo: '',
+    address: '',
+    check_in_date: '',
+    check_out_date: '',
+    TotalAmountUnit: '',
+    paymentStatus: '',
+    Bookingstatus: '',
+
+      });
+  
   const [bookings, setBookings] = useState([]);
   const [searchTerm,setSearchTerm]= useState("");
     const [apiBookings,setApiBookings]=useState([]);
+          const [addModalOpen, setAddModalOpen] = useState(false);
+    
   
 
   const getAllbooking = async () => {
@@ -84,6 +99,8 @@ const BookingTable = () => {
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
+  const handleCloseAddModal = () => setAddModalOpen(false);
+
 
   const handleEditInputChange = (field) => (event) => {
     setEditFormData({
@@ -91,6 +108,44 @@ const BookingTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleAddNew = () => {
+    setAddModalOpen(true);
+  };
+
+   const handleAddInputChange = (field) => (event) => {
+      setAddFormData({
+        ...addFormData,
+        [field]: event.target.value,
+      });
+    };
+  
+    const handleAddBooking = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/booking/createBooking', addFormData);
+        if (response.data.success) {
+          toast.success('Booking added successfully!');
+          handleCloseAddModal();
+          getAllbooking();
+          // Reset form data
+          setAddFormData({
+  
+            name: '',
+            email: '',
+            mobileNo: '',
+            address: '',
+            check_in_date: '',
+            check_out_date: '',
+            TotalAmountUnit: '',
+            paymentStatus: '',
+            Bookingstatus: '',
+           });
+        }
+      } catch (error) {
+        console.error('Error adding Booking:', error);
+        toast.error(error.response?.data?.message || 'Failed to add booking');
+      }
+    };
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -149,7 +204,11 @@ const BookingTable = () => {
   };
   return (
     <>
+    
     <div className='flex'>
+    <h1
+className="heading"
+>BOOKING DETAILS</h1>
     <TextField
            className='search'
 
@@ -168,14 +227,14 @@ const BookingTable = () => {
             </InputAdornment>
           ),
         }}
-        style={{ marginBottom: '20px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
+        style={{ marginBottom: '20px',width:'180px',display:'flex',marginRight:'160px',justifyContent:'flex-end',marginLeft:'704px' }}
       />
 
 
     <Button 
     variant="contained" 
    // color="primary" 
- //onClick={handleAddNew}
+ onClick={handleAddNew}
  style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
@@ -400,7 +459,7 @@ const BookingTable = () => {
 
     <Grid container spacing={2} mt={2}>
       {Object.keys(editFormData)
-                    .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+                    .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
 
       .map((field) => (
         <Grid item xs={6} key={field}>
@@ -483,6 +542,149 @@ const BookingTable = () => {
           </Box>
         </Box>
       </Modal>
+      <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+                      <Box sx={modalStyle}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                          <Typography variant="h6" fontWeight="bold">Add New Booking</Typography>
+                          <IconButton onClick={handleCloseAddModal}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Box>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Name"
+                              name="name"
+                              value={addFormData.name}
+                              onChange={handleAddInputChange('name')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="E-mail"
+                              name="email"
+                              value={addFormData.email}
+                              onChange={handleAddInputChange('email')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Mobile No"
+                              name="mobileNo"
+                              value={addFormData.mobileNo}
+                              onChange={handleAddInputChange('mobileNo')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Address"
+                              name="address"
+                              value={addFormData.address}
+                              onChange={handleAddInputChange('address')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label=" check_in_date"
+                              name="check_in_date"
+                             // type="number"
+                              value={addFormData.check_in_date}
+                              onChange={handleAddInputChange('check_in_date')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label=" check_out_date"
+                              name="check_out_date"
+                             // type="number"
+                              value={addFormData.check_out_date}
+                              onChange={handleAddInputChange('check_out_date')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label=" TotalAmountUnit"
+                              name="TotalAmountUnit"
+                             // type="number"
+                              value={addFormData.TotalAmountUnit}
+                              onChange={handleAddInputChange('TotalAmountUnit')}
+                              required
+                            />
+                          </Grid>
+                          
+                          
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="furnishing-label"> paymentStatus</InputLabel>
+                              <Select
+                                labelId="furnishing-label"
+                                name="paymentStatus"
+                                value={addFormData.paymentStatus}
+                                onChange={handleAddInputChange('paymentStatus')}
+                                required
+                                
+                              >
+                                 <MenuItem value="" disabled>Select Payment Status</MenuItem>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
+              <MenuItem value="Failed">Failed</MenuItem>
+                             </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="furnishing-label">Bookingstatus</InputLabel>
+                              <Select
+                                labelId="furnishing-label"
+                                name="Bookingstatus"
+                                value={addFormData.Bookingstatus}
+                                onChange={handleAddInputChange('Bookingstatus')}
+                                required
+                                
+                              >
+                              <MenuItem value="Pending">Pending</MenuItem>
+    <MenuItem value="Confirmed">Confirmed</MenuItem>
+    <MenuItem value="Cancelled">Cancelled</MenuItem>
+                             </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Box display="flex" justifyContent="flex-end" gap={2}>
+                              <Button 
+                                variant="outlined" 
+                                onClick={handleCloseAddModal}
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                variant="contained" 
+                                color="primary"
+                                onClick={handleAddBooking}
+                              >
+                                Save Booking
+                              </Button>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Modal>
+            
     </TableContainer>
        <TablePagination
       rowsPerPageOptions={[5, 10, 25]}

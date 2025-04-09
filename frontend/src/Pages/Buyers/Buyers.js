@@ -58,8 +58,19 @@ const BuyersTable = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+      const [addModalOpen, setAddModalOpen] = useState(false);
+  
   const [selectedBuyer, setSelectedBuyer] = useState(null);
   const [editFormData, setEditFormData] = useState({});
+  const [addFormData, setAddFormData] = useState({
+    name: '',
+    email: '',
+    mobileNo: '',
+    address: '',
+    RoomNo: '',
+    status: 'active',
+      });
+     
   const [buyers, setBuyers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [apiBuyers, setApiBuyers] = useState([]);
@@ -92,10 +103,15 @@ const BuyersTable = () => {
     setSelectedBuyer(buyer);
     setDeleteModalOpen(true);
   };
+  const handleAddNew = () => {
+    setAddModalOpen(true);
+  };
+
 
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
+  const handleCloseAddModal = () => setAddModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
     setEditFormData({
@@ -103,6 +119,39 @@ const BuyersTable = () => {
       [field]: event.target.value,
     });
   };
+
+  const handleAddInputChange = (field) => (event) => {
+    setAddFormData({
+      ...addFormData,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleAddBuyer = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/buyer/createBuyer', addFormData);
+      if (response.data.success) {
+        toast.success('Buyer added successfully!');
+        handleCloseAddModal();
+        getAllbuyers();
+        // Reset form data
+        setAddFormData({
+
+      name: '',
+      email: '',
+      mobileNo: '',
+      address: '',
+      RoomNo: '',
+      status: '',
+        });
+      }
+    } catch (error) {
+      console.error('Error adding buyer:', error);
+      toast.error(error.response?.data?.message || 'Failed to add buyer');
+    }
+  };
+
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -195,7 +244,7 @@ const BuyersTable = () => {
 
         <Button
           variant="contained"
-          //onClick={handleAddNew}
+          onClick={handleAddNew}
           style={{
             marginBottom: "20px",
             textWrap: "wrap",
@@ -413,7 +462,7 @@ const BuyersTable = () => {
             </Box>
             <Grid container spacing={2} mt={2}>
               {Object.keys(editFormData)
-              .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+              .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
               .map((field) => (
                 <Grid item xs={6} key={field}>
                   {field === "status" ? (
@@ -473,6 +522,107 @@ const BuyersTable = () => {
             </Box>
           </Box>
         </Modal>
+
+        <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+                <Box sx={modalStyle}>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="h6" fontWeight="bold">Add New Buyer</Typography>
+                    <IconButton onClick={handleCloseAddModal}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Name"
+                        name="name"
+                        value={addFormData.name}
+                        onChange={handleAddInputChange('name')}
+                        required
+                      />
+                    </Grid>
+                   
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="E-mail"
+                        name="email"
+                        value={addFormData.email}
+                        onChange={handleAddInputChange('email')}
+                        required
+                      />
+                    </Grid>
+                   
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Mobile No"
+                        name="mobileNo"
+                        value={addFormData.mobileNo}
+                        onChange={handleAddInputChange('mobileNo')}
+                        required
+                      />
+                    </Grid>
+                   
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Address"
+                        name="address"
+                        value={addFormData.address}
+                        onChange={handleAddInputChange('address')}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Room No"
+                        name="RoomNo"
+                       // type="number"
+                        value={addFormData.RoomNo}
+                        onChange={handleAddInputChange('RoomNo')}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="furnishing-label">Status</InputLabel>
+                        <Select
+                          labelId="furnishing-label"
+                          name="status"
+                          value={addFormData.status}
+                          onChange={handleAddInputChange('status')}
+                          required
+                          
+                        >
+                           <MenuItem value="Active">Active</MenuItem>
+                        <MenuItem value="Inactive">Inactive</MenuItem>
+                       </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Box display="flex" justifyContent="flex-end" gap={2}>
+                        <Button 
+                          variant="outlined" 
+                          onClick={handleCloseAddModal}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          variant="contained" 
+                          color="primary"
+                          onClick={handleAddBuyer}
+                        >
+                          Save Buyer
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Modal>
+      
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

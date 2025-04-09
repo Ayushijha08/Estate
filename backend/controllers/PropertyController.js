@@ -9,6 +9,8 @@ export const createProperty = async (req, res) => {
 
         await Property.create({ propertyTitle, propertyType, address, price, areaSqft, furnishing, status}) 
         res.status(201).json({
+            success:true,
+
             message: 'Property created successfully'
         });
     } catch (error) {

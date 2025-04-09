@@ -9,6 +9,7 @@ export const createLease = async (req, res) => {
 
         await Lease.create({ name, email, mobileNo, address, LeaseStartDate, LeaseEndDate, MonthlyRent, SecurityDeposit, paymentStatus, LeaseStatus}) 
         res.status(201).json({
+           success:true,
             message: 'Lease created successfully'
         });
     } catch (error) {

@@ -10,6 +10,7 @@ export const createBuyer = async (req, res) => {
 
         await Buyers.create({ name, email, mobileNo, address, RoomNo, status}) 
         res.status(201).json({
+            success:true,
             message: 'Buyer created successfully'
         });
     } catch (error) {

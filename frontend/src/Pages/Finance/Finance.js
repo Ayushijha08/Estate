@@ -57,7 +57,8 @@ const FinanceTable = () => {
   };
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
- 
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -66,6 +67,15 @@ const FinanceTable = () => {
   const [finances, setFinance] = useState([]);
   const [searchTerm,setSearchTerm]= useState("");
     const [apiFinances,setApiFinances]=useState([]);
+    const [addFormData, setAddFormData] = useState({
+      name: '',
+      Amount: '',
+      transactionType: '',
+      category: '',
+      paymentMode:'',
+      transactionDate: '',
+      status: 'Completed',
+    });
   
 
   const getAllfinances = async () => {
@@ -93,6 +103,10 @@ const FinanceTable = () => {
     setEditFormData(finances);
     setEditModalOpen(true);
   };
+  const handleAddNew = () => {
+    setAddModalOpen(true);
+  };
+
 
   const handleDelete = (finances) => {
     setSelectedFinance(finances);
@@ -126,6 +140,7 @@ const FinanceTable = () => {
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
+  const handleCloseAddModal = () => setAddModalOpen(false);
 
   const handleEditInputChange = (field) => (event) => {
     setEditFormData({
@@ -133,6 +148,37 @@ const FinanceTable = () => {
       [field]: event.target.value,
     });
   };
+  const handleAddInputChange = (field) => (event) => {
+    setAddFormData({
+      ...addFormData,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleAddFinance = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/finance/createFinance', addFormData);
+      if (response.data.success) {
+        toast.success('Finance added successfully!');
+        handleCloseAddModal();
+        getAllfinances();
+        // Reset form data
+        setAddFormData({
+          name: '',
+          Amount: '',
+          transactionType: '',
+          category: '',
+          paymentMode:'',
+          transactionDate: '',
+          status: 'Completed',        });
+      }
+    } catch (error) {
+      console.error('Error adding finance:', error);
+      toast.error(error.response?.data?.message || 'Failed to add finance');
+    }
+  };
+  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -219,7 +265,7 @@ const FinanceTable = () => {
     <Button 
     variant="contained" 
    // color="primary" 
- //onClick={handleAddNew}
+ onClick={handleAddNew}
  style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
@@ -431,7 +477,7 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
           </Box>
           <Grid container spacing={2} mt={2}>
   {Object.keys(editFormData)
-     .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v")
+     .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
 
   .map((field) => (
     <Grid item xs={6} key={field}>
@@ -520,6 +566,145 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
           </Box>
         </Box>
       </Modal>
+
+
+      <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+                      <Box sx={modalStyle}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                          <Typography variant="h6" fontWeight="bold">Add New finance</Typography>
+                          <IconButton onClick={handleCloseAddModal}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Box>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              label="Name"
+                              name="name"
+                              value={addFormData.name}
+                              onChange={handleAddInputChange('name')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="Amount"
+                              name="Amount"
+                              //type="number"
+                              value={addFormData.Amount}
+                              onChange={handleAddInputChange('Amount')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="property-type-label">Transaction Type</InputLabel>
+                              <Select
+                                labelId="property-type-label"
+                                name="transactionType"
+                                value={addFormData.transactionType}
+                                onChange={handleAddInputChange('transactionType')}
+                                required
+                              >
+                                  <MenuItem value="Credit">Credit</MenuItem>
+                                  <MenuItem value="Debit">Debit</MenuItem>
+          
+                               </Select>
+                            </FormControl>
+                          </Grid>
+                         
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="category"
+                              name="category"
+                             // type="number"
+                              value={addFormData.category}
+                              onChange={handleAddInputChange('category')}
+                              required
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="furnishing-label">payment Mode</InputLabel>
+                              <Select
+                                labelId="furnishing-label"
+                                name="paymentMode"
+                                value={addFormData.paymentMode}
+                                onChange={handleAddInputChange('paymentMode')}
+                                required
+                                
+                              >
+                                 <MenuItem value="Cash">Cash</MenuItem>
+                                 <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
+                                 <MenuItem value="Credit Card">Credit Card</MenuItem>
+                                 <MenuItem value="Debit Card">Debit Card</MenuItem>
+                                 <MenuItem value="Online">Online</MenuItem>
+   </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="transaction Date"
+                              name="transactionDate"
+                             // type="number"
+                              value={addFormData.transactionDate}
+                              onChange={handleAddInputChange('transactionDate')}
+                              required
+                            />
+                          </Grid>
+                         
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="status-label">Status</InputLabel>
+                              <Select
+                                labelId="status-label"
+                                name="status"
+                                value={addFormData.status}
+                                onChange={handleAddInputChange('status')}
+                                required
+                              >
+                                <MenuItem value="Pending">Pending</MenuItem>
+                                <MenuItem value="Completed">Completed</MenuItem>
+                                <MenuItem value="Failed">Failed</MenuItem>
+                             </Select>
+                            </FormControl>
+                          </Grid>
+     
+
+
+
+
+
+
+
+
+
+
+                          <Grid item xs={12}>
+                            <Box display="flex" justifyContent="flex-end" gap={2}>
+                              <Button 
+                                variant="outlined" 
+                                onClick={handleCloseAddModal}
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                variant="contained" 
+                                color="primary"
+                                onClick={handleAddFinance}
+                              >
+                                Save finance
+                              </Button>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Modal>
+              
     </TableContainer>
       <TablePagination
       rowsPerPageOptions={[5, 10, 25]}

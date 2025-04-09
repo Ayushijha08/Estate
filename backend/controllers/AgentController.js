@@ -9,6 +9,7 @@ export const createAgent = async (req, res) => {
 
         await Agent.create({ name, email, mobileNo, address, licenseNo, experience, commissionRate, status}) 
         res.status(201).json({
+           success:true,
             message: 'Agent created successfully'
         });
     } catch (error) {

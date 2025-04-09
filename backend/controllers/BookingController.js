@@ -9,6 +9,7 @@ export const createBooking = async (req, res) => {
 
         await Booking.create({ name, email, mobileNo, address, check_in_date, check_out_date, TotalAmountUnit, paymentStatus, Bookingstatus}) 
         res.status(201).json({
+           success:true,
             message: 'Booking created successfully'
         });
     } catch (error) {

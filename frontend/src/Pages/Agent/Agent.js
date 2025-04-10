@@ -171,11 +171,25 @@ const AgentTable = () => {
 
     setAgents(filtered);
 };
-  const handleUpdate = () => {
-    console.log("Updating Agents:", editFormData);
-    // Here you would typically make an API call to update the Agents
-    handleCloseEditModal();
-  };
+const handleUpdate = async () => {
+  handleCloseEditModal();
+  // console.log("selected property ", selectedProperty);
+  
+  try {
+    const res = await axios.put(
+      `http://localhost:3001/agent/updateAgent/${selectedAgents._id}`, editFormData
+    );
+    if (res.data.success) {
+      toast.success(res.data.message);
+      getAllAgents();
+      // reset the editFormData
+      setEditFormData({});
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response.data.message);
+  }
+};
 
   const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
@@ -204,6 +218,10 @@ const AgentTable = () => {
   };
   return (
     <>
+      <h1
+className="heading"
+>AGENT DETAILS</h1>
+  
     <div className='flex'>
     <TextField
            className='search'
@@ -211,8 +229,6 @@ const AgentTable = () => {
         label="Search"
         variant="outlined"
        // fullWidth
-      //  value={searchQuery}
-       // onChange={handleSearchChange}
        value={searchTerm}
         onChange={handleSearchChange}
         
@@ -223,7 +239,7 @@ const AgentTable = () => {
             </InputAdornment>
           ),
         }}
-        style={{ marginBottom: '20px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
+        style={{ marginBottom: '9px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
       />
 
 
@@ -231,7 +247,7 @@ const AgentTable = () => {
     variant="contained" 
    // color="primary" 
  onClick={handleAddNew}
- style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
+ style={{ marginBottom: '8px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
     Add Agent
@@ -257,35 +273,35 @@ const AgentTable = () => {
         >
 
           <TableRow className="bg-gray-200">
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               ID
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Name
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               E-mail
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Mobile No
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Address
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
             Lisence No
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               {" "}
               Experience
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            commission Rate
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+            Commission Rate
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
@@ -348,15 +364,8 @@ agents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((Agents, 
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >
-                <Select
-                  value={Agents.status}
-                  onChange={(e) => handleStatusChange(Agents._id, e.target.value)}
-                  className="border p-1 rounded"
-                >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="InActive">InActive</MenuItem>
-                </Select>
+              >{Agents.status}
+
               </TableCell>
               <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
                 <TableContainer

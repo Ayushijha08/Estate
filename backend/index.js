@@ -10,7 +10,9 @@ import agentRouter from "./routes/AgentRoute.js";
 import bookingRouter from "./routes/BookingRoute.js";
 import financeRouter from "./routes/FinanceRoute.js";
 import SellersRouter from "./routes/SellersRoute.js";
-
+import UserRouter from "./routes/UserRoute.js";
+import SiteVisitsRouter from "./routes/SiteVisitsRoute.js";
+import ProjectRouter  from "./routes/ProjectRoute.js"
 
 dotenv.config();
 const app =express();
@@ -27,6 +29,10 @@ app.use("/agent",agentRouter)
 app.use("/finance",financeRouter)
 app.use("/booking",bookingRouter)
 app.use("/sellers",SellersRouter)
+app.use("/user",UserRouter)
+app.use("/SiteVisits",SiteVisitsRouter)
+app.use("/project",ProjectRouter)
+
 
 
 connectDb();
@@ -35,5 +41,4 @@ app.get('/',(req, res)=>{
 })
 app.listen(PORT,() =>{
 console.log(`Server is running on port ${PORT}`)
-});//name, Email, mobileNo, address, check_in_date, check_out_date, TotalAmountUnit, paymentStatus, Bookingstatus} = req.body;
-//if (!name ||  !Email || !mobileNo || !address || !check_in_date || !check_out_date || !TotalAmountUnit  ||    !paymentStatus || !Bookingstatus ) 
+});

@@ -10,6 +10,8 @@ import LayoutLease from "./Layout/LayoutLease";
 import LayoutFinance from "./Layout/LayoutFinance";
 import LayoutSellers from "./Layout/LayoutSellers";
 import {ToastContainer} from "react-toastify"
+import LayoutProject from "./Layout/LayoutProject";
+import LayoutSiteVisits from "./Layout/LayoutSiteVisits";
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
         <Route path="/lease" element={<LayoutLease/>}/>
         <Route path="/finance" element={<LayoutFinance/>}/>
         <Route path="/sellers" element={<LayoutSellers/>}/>
+        <Route path="/project" element={<LayoutProject/>}/>
+        <Route path="/SiteVisits" element={<LayoutSiteVisits/>}/>
+
 
 
 

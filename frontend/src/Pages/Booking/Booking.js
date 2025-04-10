@@ -154,6 +154,21 @@ const BookingTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page
   };
+  const fieldLabels = {
+    name: "Name",
+    mobileNo: "Mobile No",
+    email: "Email",
+    address: "Address",
+    check_in_date: " Check in date",
+    check_out_date: " Check out date",
+    TotalAmountUnit: "Total Amount Unit",
+    paymentStatus: "Payment Status",
+    Bookingstatus: "Booking Status",
+
+
+    // Add all other fields you want to show with custom labels
+  };
+  
   
   const handleSearchChange = (e) => {
     console.log("target", e.target);
@@ -178,11 +193,25 @@ const BookingTable = () => {
     setBookings(filtered);
 };
 
-  const handleUpdate = () => {
-    console.log("Updating booking:", editFormData);
-    // Here you would typically make an API call to update the booking
-    handleCloseEditModal();
-  };
+const handleUpdate = async () => {
+  handleCloseEditModal();
+  // console.log("selected property ", selectedProperty);
+  
+  try {
+    const res = await axios.put(
+      `http://localhost:3001/booking/updateBooking/${selectedBooking._id}`, editFormData
+    );
+    if (res.data.success) {
+      toast.success(res.data.message);
+      getAllbooking();
+      // reset the editFormData
+      setEditFormData({});
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response.data.message);
+  }
+};
 
   const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
@@ -204,11 +233,11 @@ const BookingTable = () => {
   };
   return (
     <>
-    
-    <div className='flex'>
-    <h1
+      <h1
 className="heading"
 >BOOKING DETAILS</h1>
+  
+    <div className='flex'>
     <TextField
            className='search'
 
@@ -227,7 +256,14 @@ className="heading"
             </InputAdornment>
           ),
         }}
-        style={{ marginBottom: '20px',width:'180px',display:'flex',marginRight:'160px',justifyContent:'flex-end',marginLeft:'704px' }}
+        style={{
+          marginBottom: "9px",
+          width: "160px",
+          display: "flex",
+          marginRight: "150px",
+          justifyContent: "flex-end",
+          marginLeft: "800px",
+        }}
       />
 
 
@@ -235,7 +271,7 @@ className="heading"
     variant="contained" 
    // color="primary" 
  onClick={handleAddNew}
- style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
+ style={{ marginBottom: '8px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
     Add Booking
@@ -260,37 +296,37 @@ className="heading"
           }}
         >
           <TableRow className="bg-gray-200">
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               ID
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Name
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               E-mail
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Mobile No
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Address
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
             check in date            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               
               check out date            </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Total Amount Unit
             </TableCell>
             
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            payment Status
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+            Payment Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Booking Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Action
             </TableCell>
           </TableRow>
@@ -353,41 +389,13 @@ className="heading"
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >  <Select
-              value={booking.paymentStatus}
-              onChange={(e) => {
-                const updatedBookings = [...bookings];
-                updatedBookings[index].paymentStatus = e.target.value;
-                setBookings(updatedBookings);
-              }}
-              size="small"
-              variant="standard"
-              fullWidth
-            >
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Pending">Pending</MenuItem>
-              <MenuItem value="Failed">Failed</MenuItem>
-            </Select>
+              > {booking.paymentStatus} 
           
             
 </TableCell>
 
 <TableCell sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }} className="border p-2">
-<Select
-    value={booking.Bookingstatus}
-    onChange={(e) => {
-      const updatedBookings = [...bookings];
-      updatedBookings[index].Bookingstatus = e.target.value;
-      setBookings(updatedBookings);
-    }}
-    size="small"
-    variant="standard"
-    fullWidth
-  >
-    <MenuItem value="Pending">Pending</MenuItem>
-    <MenuItem value="Confirmed">Confirmed</MenuItem>
-    <MenuItem value="Cancelled">Cancelled</MenuItem>
-  </Select>
+{booking.Bookingstatus}
   
 </TableCell>
               <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
@@ -435,10 +443,13 @@ className="heading"
           </Box>
           {selectedBooking && (
             <Grid container spacing={2} mt={2}>
-              {Object.entries(selectedBooking).map(([key, value]) => (
+              {Object.entries(selectedBooking)
+               .filter(([key]) => key !== "createdAt" && key !== "updatedAt"&& key !== "_id"&& key !== "__v")
+
+              .map(([key, value]) => (
                 <Grid item xs={6} key={key}>
                   <Typography>
-                    <strong>{key}:</strong> {value}
+                    <strong>{fieldLabels[key]}:</strong> {value}
                   </Typography>
                 </Grid>
               ))}
@@ -496,7 +507,63 @@ className="heading"
               <MenuItem value="Cancelled">Cancelled</MenuItem>
             </Select>
             </FormControl>
-          ) : (
+          ) : field === "name" ? (
+            <TextField
+              label="Name"
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ) :   field === "email" ? (
+            <TextField
+              label="E-mail"
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ) :   field === "mobileNo" ? (
+            <TextField
+              label="Mobile No"
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ) :   field === "address" ? (
+            <TextField
+              label="Address"
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ) :   field === "check_in_date" ? (
+            <TextField
+              label="Check in date "
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ):   field === "check_out_date" ? (
+            <TextField
+              label="Check out date"
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ):   field === "TotalAmountUnit" ? (
+            <TextField
+              label="Total Amount Unit"
+              value={editFormData[field] || ""}
+              onChange={handleEditInputChange(field)}
+              fullWidth
+              variant="outlined"
+            />
+          ) :(
             <TextField
               label={field}
               value={editFormData[field] || ""}

@@ -143,6 +143,18 @@ const PropertyTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page
   };
+  const fieldLabels = {
+    propertyTitle: "Property Title",
+    propertyType: "Property Type",
+    address: "Address",
+    price: "Price",
+    areaSqft: "Area Sqft",
+    furnishing: "furnishing",
+    status: "Status",
+
+
+    // Add all other fields you want to show with custom labels
+  };
 
   const handleSearchChange = (e) => {
     console.log("target", e.target);
@@ -167,10 +179,24 @@ const PropertyTable = () => {
     setProperties(filtered);
   };
 
-  const handleUpdate = () => {
-    console.log("Updating property:", editFormData);
-    // Here you would typically make an API call to update the property
+  const handleUpdate = async () => {
     handleCloseEditModal();
+    // console.log("selected property ", selectedProperty);
+    
+    try {
+      const res = await axios.put(
+        `http://localhost:3001/property/updateProperty/${selectedProperty._id}`, editFormData
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        getAllProperty();
+        // reset the editFormData
+        setEditFormData({});
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -185,47 +211,16 @@ const PropertyTable = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error();
+      // toast.error();
       toast.error(error.response.data.message);
     }
   };
-  const handleTitleChange = (id, newTitle) => {
-    setProperties((prev) =>
-      prev.map((property) =>
-        property._id === id
-          ? { ...property, propertyTitle: newTitle }
-          : property
-      )
-    );
-  };
-  const handleTypeChange = (id, newType) => {
-    setProperties((prev) =>
-      prev.map((property) =>
-        property._id === id ? { ...property, propertyType: newType } : property
-      )
-    );
-  };
+  
 
-  const handleFurnishingChange = (id, newFurnishing) => {
-    setProperties((prev) =>
-      prev.map((property) =>
-        property._id === id
-          ? { ...property, furnishing: newFurnishing }
-          : property
-      )
-    );
-  };
-
-  const handleStatusChange = (id, newStatus) => {
-    setProperties((prev) =>
-      prev.map((property) =>
-        property._id === id
-     ? { ...property, status: newStatus } : property
-      )
-    );
-  };
   return (
     <>
+    <h1
+    className="heading">PROPERTY DETAILS</h1>
       <div className="flex">
         <TextField
           className="search"
@@ -241,7 +236,8 @@ const PropertyTable = () => {
             ),
           }}
           style={{
-            marginBottom: "20px",
+           marginBottom: "9px",
+          // marginTop:"10px",
             width: "160px",
             display: "flex",
             marginRight: "150px",
@@ -256,7 +252,7 @@ const PropertyTable = () => {
           // color="primary"
           onClick={handleAddNew}
           style={{
-            marginBottom: "20px",
+            marginBottom: "8px",
             textWrap: "nowrap",
             display: "flex",
             marginLeft: "40px",
@@ -272,7 +268,7 @@ const PropertyTable = () => {
 
       <TableContainer
         component={Paper}
-        style={{ overflowX: "auto", maxWidth: 1250 }}
+        style={{ overflowX: "auto", maxWidth: 1250 ,marginTop:"0"}}
       >
         <Table className="w-full border border-gray-300">
           <TableHead
@@ -286,29 +282,28 @@ const PropertyTable = () => {
             }}
           >
             <TableRow className="bg-gray-200">
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
                 S.No
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Property Title
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
                 Property Type
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Address
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
                 Price
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
                 Area(Sqft)
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-                {" "}
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Furnishing
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Status
               </TableCell>
               <TableCell
@@ -347,18 +342,8 @@ const PropertyTable = () => {
                       }}
                       className="border p-2"
                     >
-                      
-                      <Select
-                        value={property.propertyTitle}
-                        variant="standard"
-                        onChange={(e) =>
-                          handleTitleChange(property._id, e.target.value)
-                        }
-                      >
-                        <MenuItem value="Luxury">Luxury</MenuItem>
-                        <MenuItem value="3BHK">3BHK</MenuItem>
-                        <MenuItem value="Apartment">Apartment</MenuItem>
-                      </Select>
+                      {property.propertyTitle}
+                     
                     </TableCell>
                     <TableCell
                       sx={{
@@ -368,20 +353,8 @@ const PropertyTable = () => {
                       }}
                       className="border p-2"
                     >
-                      <Select
-                        variant="standard"
-                        value={property.propertyType}
-                        onChange={(e) =>
-                          handleTypeChange(property._id, e.target.value)
-                        }
-                      >
-                        <MenuItem value="Apartment">Apartment</MenuItem>
-                        <MenuItem value="House">House</MenuItem>
-                        <MenuItem value="Commercial">Commercial</MenuItem>
-                        <MenuItem value="Land">Land</MenuItem>
-                        <MenuItem value="Office">Office</MenuItem>
-                        <MenuItem value="Villa">Villa</MenuItem>
-                      </Select>
+                      {property.propertyType}
+                      
                     </TableCell>
                     <TableCell
                       sx={{
@@ -420,21 +393,8 @@ const PropertyTable = () => {
                         textAlign: "center",
                       }}
                       className="border p-2"
-                    >
-                      <Select
-                        value={property.furnishing}
-                        variant="standard"
-                        sx={{ minWidth: "150" }}
-                        onChange={(e) =>
-                          handleFurnishingChange(property._id, e.target.value)
-                        }
-                      >
-                        <MenuItem value="Furnished">Furnished</MenuItem>
-                        <MenuItem value="Semi-Furnished">
-                          Semi-Furnished
-                        </MenuItem>
-                        <MenuItem value="Unfurnished">Unfurnished</MenuItem>
-                      </Select>
+                    >{property.furnishing}
+                      
                     </TableCell>
                     <TableCell
                       sx={{
@@ -443,19 +403,8 @@ const PropertyTable = () => {
                         textAlign: "center",
                       }}
                       className="border p-2"
-                    >
-                      <Select
-                        value={property.status}
-                        variant="standard"
-                        onChange={(e) =>
-                          handleStatusChange(property._id, e.target.value)
-                        }
-                        className="border p-1 rounded"
-                      >
-                        <MenuItem value="Available">Available</MenuItem>
-                        <MenuItem value="Sold">Sold</MenuItem>
-                        <MenuItem value="Rented">Rented</MenuItem>
-                      </Select>
+                    >{property.status}
+
                     </TableCell>
                     <TableCell
                       sx={{ fontWeight: "bolder" }}
@@ -498,17 +447,21 @@ const PropertyTable = () => {
         <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
           <Box sx={modalStyle}>
             <Box display="flex" justifyContent="space-between">
-              <Typography variant="h6">Property Details</Typography>
+              <Typography 
+              sx={{fontWeight:'bold'}}
+              variant="h6">Property Details</Typography>
               <IconButton onClick={handleCloseViewModal}>
                 <CloseIcon />
               </IconButton>
             </Box>
             {selectedProperty && (
               <Grid container spacing={2} mt={2}>
-                {Object.entries(selectedProperty).map(([key, value]) => (
+                {Object.entries(selectedProperty)
+                .filter(([key]) => key !== "createdAt" && key !== "updatedAt"&& key !== "_id"&& key !== "__v")
+                .map(([key, value]) => (
                   <Grid item xs={6} key={key}>
                     <Typography>
-                      <strong>{key}:</strong> {value}
+                      <strong>{fieldLabels[key]}:</strong> {value}
                     </Typography>
                   </Grid>
                 ))}
@@ -540,7 +493,7 @@ const PropertyTable = () => {
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        variant="standard"
+                       // variant="standard"
                         value={editFormData[field] || ""}
                         onChange={handleEditInputChange(field)}
                       >
@@ -554,7 +507,7 @@ const PropertyTable = () => {
                       <InputLabel>Property Type</InputLabel>
                       <Select
                         value={editFormData[field] || ""}
-                        variant="standard"
+                       // variant="standard"
                         onChange={handleEditInputChange(field)}
                       >
                         <MenuItem value="Apartment">Apartment</MenuItem>
@@ -570,7 +523,7 @@ const PropertyTable = () => {
                       <InputLabel>Furnishing</InputLabel>
                       <Select
                         value={editFormData[field] || ""}
-                        variant="standard"
+                      //  variant="standard"
                         onChange={handleEditInputChange(field)}
                       >
                         <MenuItem value="Furnished">Furnished</MenuItem>

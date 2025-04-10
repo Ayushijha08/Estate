@@ -61,6 +61,8 @@ export const updateLease = async (req, res) => {
         );
 
         res.json({
+            success:true,
+
             message: 'Lease updated successfully',
             Lease: updatedLease
         });

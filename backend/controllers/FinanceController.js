@@ -61,6 +61,7 @@ export const updateFinance = async (req, res) => {
         );
 
         res.json({
+           success:true,
             message: 'Finance updated successfully',
             Finance: updatedFinance
         });

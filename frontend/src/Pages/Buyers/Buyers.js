@@ -184,12 +184,25 @@ const BuyersTable = () => {
     setBuyers(filtered);
   };
 
-  const handleUpdate = () => {
-    console.log("Updating buyer:", editFormData);
-    // Here you would typically make an API call to update the buyer
+  const handleUpdate = async () => {
     handleCloseEditModal();
+    // console.log("selected property ", selectedProperty);
+    
+    try {
+      const res = await axios.put(
+        `http://localhost:3001/buyer/updateBuyer/${selectedBuyer._id}`, editFormData
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        getAllbuyers();
+        // reset the editFormData
+        setEditFormData({});
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
-
   const handleConfirmDelete = async () => {
     handleCloseDeleteModal();
     try {
@@ -215,6 +228,10 @@ const BuyersTable = () => {
   };
   return (
     <>
+      <h1
+className="heading"
+>BUYER DETAILS</h1>
+  
       <div className="flex">
         <TextField
           className="search"
@@ -233,7 +250,7 @@ const BuyersTable = () => {
             ),
           }}
           style={{
-            marginBottom: "20px",
+            marginBottom: "9px",
             width: "160px",
             display: "flex",
             marginRight: "150px",
@@ -246,7 +263,7 @@ const BuyersTable = () => {
           variant="contained"
           onClick={handleAddNew}
           style={{
-            marginBottom: "20px",
+            marginBottom: "8px",
             textWrap: "wrap",
             marginLeft: "40px",
             padding: "10px",
@@ -274,28 +291,28 @@ const BuyersTable = () => {
             }}
           >
             <TableRow className="bg-gray-200">
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-                ID
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+                SI No.
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Name
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 E-mail
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Mobile No
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
                 Address
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Room No
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
                 Status
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
                 Action
               </TableCell>
             </TableRow>
@@ -378,18 +395,8 @@ const BuyersTable = () => {
                         textAlign: "center",
                       }}
                       className="border p-2"
-                    >
-                      <Select
-                        value={buyer.status}
-                        variant="standard"
-                        onChange={(e) =>
-                          handleStatusChange(buyer._id, e.target.value)
-                        }
-                        className="border p-1 rounded"
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="InActive">InActive</MenuItem>
-                      </Select>
+                    >{buyer.status}
+                      
                     </TableCell>
                     <TableCell
                       sx={{ fontWeight: "bolder" }}

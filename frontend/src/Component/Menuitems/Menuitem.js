@@ -40,7 +40,16 @@ const Menuitems = [
         label: "Buyer",
         href: "/buyers",
       },
-  
+      {
+        icon: "/sidebar/partner.png",
+        label: "Projects",
+        href: "/project",
+      },
+      {
+        icon: "/sidebar/partner.png",
+        label: "Site Visits",
+        href: "/SiteVisits",
+      },
 
 ];
 

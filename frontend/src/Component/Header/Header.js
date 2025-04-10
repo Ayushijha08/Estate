@@ -16,7 +16,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 
 
-const Header=()=>
+const Header=({ HeaderText = "Details" })=>
 {
 
 
@@ -41,6 +41,7 @@ const Header=()=>
 
     return (
         <>
+        
         <AppBar position="static" style={{backgroundColor:"#ffffff", height:"60px"}}>
         
           <Box sx={{ flexGrow: 0, padding:"10px 30px",display:'flex', justifyContent:"flex-end" }}>

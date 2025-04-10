@@ -173,10 +173,24 @@ const LeaseTable = () => {
     setPage(0); // Reset to first page
   };
   
-  const handleUpdate = () => {
-    console.log("Updating lease:", editFormData);
-    // Here you would typically make an API call to update the lease
+  const handleUpdate = async () => {
     handleCloseEditModal();
+    // console.log("selected property ", selectedProperty);
+    
+    try {
+      const res = await axios.put(
+        `http://localhost:3001/lease/updateLease/${selectedLease._id}`, editFormData
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        getAllLease();
+        // reset the editFormData
+        setEditFormData({});
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   const handleConfirmDelete =async () => {
@@ -205,6 +219,10 @@ const LeaseTable = () => {
   };
   return (
     <>
+      <h1
+className="heading"
+>LEASE DETAILS</h1>
+  
     <div className='flex'>
     <TextField
            className='search'
@@ -224,7 +242,7 @@ const LeaseTable = () => {
             </InputAdornment>
           ),
         }}
-        style={{ marginBottom: '20px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
+        style={{ marginBottom: '9px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
       />
 
 
@@ -232,7 +250,7 @@ const LeaseTable = () => {
     variant="contained" 
    // color="primary" 
  onClick={handleAddNew}
- style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
+ style={{ marginBottom: '8px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
     Add Lease
@@ -254,42 +272,42 @@ const LeaseTable = () => {
           }}
         >
           <TableRow className="bg-gray-200">
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              S.No
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+              SI.No
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
            Name
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             email
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            mobile No
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+            Mobile No
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            address
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+            Address
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            LeaseStartDate
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+            Lease Start Date
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               {" "}
               Lease End Date
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Monthly Rent
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Security Deposit
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            payment Status
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+            Payment Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            LeaseStatus
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+            Lease Status
             </TableCell>
 
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
@@ -357,31 +375,13 @@ const LeaseTable = () => {
                 {lease.SecurityDeposit}
               </TableCell>
               
-              <TableCell>
-          <Select
-            value={lease.paymentStatus}
-            variant="standard"
-
-            onChange={(e) => handleStatusChange(lease._id, "paymentStatus", e.target.value)}
-          >
-            <MenuItem value="Paid">Paid</MenuItem>
-            <MenuItem value="Unpaid">Unpaid</MenuItem>
-            <MenuItem value="Partial">Partial</MenuItem>
-          </Select>
+              <TableCell>{lease.paymentStatus}
+          
         </TableCell>
         
         {/* Lease Status Dropdown */}
-        <TableCell>
-          <Select
-                        variant="standard"
-
-            value={lease.LeaseStatus}
-            onChange={(e) => handleStatusChange(lease._id, "LeaseStatus", e.target.value)}
-          >
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Expired">Expired</MenuItem>
-            <MenuItem value="Terminated">Terminated</MenuItem>
-          </Select>
+        <TableCell>{lease.LeaseStatus}
+          
         </TableCell>
         
         
@@ -590,9 +590,9 @@ const LeaseTable = () => {
                           <Grid item xs={12} sm={6}>
                             <TextField
                               fullWidth
-                              label="LeaseStartDate"
+                             // label="LeaseStartDate"
                               name="LeaseStartDate"
-                             // type="number"
+                              type="Date"
                               value={addFormData.LeaseStartDate}
                               onChange={handleAddInputChange('LeaseStartDate')}
                               required
@@ -601,9 +601,9 @@ const LeaseTable = () => {
                           <Grid item xs={12} sm={6}>
                             <TextField
                               fullWidth
-                              label=" LeaseEndDate"
+                              //label=" LeaseEndDate"
                               name="LeaseEndDate"
-                             // type="number"
+                              type="Date"
                               value={addFormData.LeaseEndDate}
                               onChange={handleAddInputChange('LeaseEndDate')}
                               required

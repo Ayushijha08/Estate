@@ -170,7 +170,8 @@ const FinanceTable = () => {
           category: '',
           paymentMode:'',
           transactionDate: '',
-          status: 'Completed',        });
+          status: 'Completed',   
+             });
       }
     } catch (error) {
       console.error('Error adding finance:', error);
@@ -212,11 +213,25 @@ const FinanceTable = () => {
 };
 
 
-  const handleUpdate = () => {
-    console.log("Updating finances:", editFormData);
-    // Here you would typically make an API call to update the finances
-    handleCloseEditModal();
-  };
+const handleUpdate = async () => {
+  handleCloseEditModal();
+  // console.log("selected property ", selectedProperty);
+  
+  try {
+    const res = await axios.put(
+      `http://localhost:3001/finance/updateFinance/${selectedFinance._id}`, editFormData
+    );
+    if (res.data.success) {
+      toast.success(res.data.message);
+      getAllfinances();
+      // reset the editFormData
+      setEditFormData({});
+    } 
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response.data.message);
+  }
+};
 
   const handleConfirmDelete =async () => {
     handleCloseDeleteModal();
@@ -239,6 +254,10 @@ const FinanceTable = () => {
 
   return (
     <>
+      <h1
+className="heading"
+>FINANCE DETAILS</h1>
+  
     <div className='flex'>
     <TextField
            className='search'
@@ -258,7 +277,7 @@ const FinanceTable = () => {
             </InputAdornment>
           ),
         }}
-        style={{ marginBottom: '20px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
+        style={{ marginBottom: '9px',width:'160px',display:'flex',marginRight:'150px',justifyContent:'flex-end',marginLeft:'800px' }}
       />
 
 
@@ -266,7 +285,7 @@ const FinanceTable = () => {
     variant="contained" 
    // color="primary" 
  onClick={handleAddNew}
- style={{ marginBottom: '20px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
+ style={{ marginBottom: '8px',textWrap:'wrap',marginLeft:'40px' ,padding:'10px',borderRadius:'5px',height:'55px',width:'130px'}}
 
   >
     Add finance
@@ -292,32 +311,32 @@ const FinanceTable = () => {
         >
 
           <TableRow className="bg-gray-200">
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              S. NO.
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+              SI. No.
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Name
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Amount
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Transaction Type
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Category
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
             Payment Mode
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
             
               Transaction Date
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Action
             </TableCell>
           </TableRow>
@@ -351,16 +370,8 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >
-                <Select
-    value={finances.transactionType}
-    variant="standard"
-    onChange={(e) => handleTransactionTypeChange(finances._id, "transactionType")(e)}
-    className="border p-1 rounded"
-  >
-    <MenuItem value="Credit">Credit</MenuItem>
-    <MenuItem value="Debit">Debit</MenuItem>
-  </Select>
+              >{finances.transactionType}
+             
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
@@ -371,19 +382,8 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >
-  <Select
-    value={finances.paymentMode}
-    variant="standard"
-    onChange={(e) => handlePaymentModeChange(finances._id, "paymentMode")(e)}
-    className="border p-1 rounded"
-  >
-    <MenuItem value="Cash">Cash</MenuItem>
-    <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
-    <MenuItem value="Credit Card">Credit Card</MenuItem>
-    <MenuItem value="Debit Card">Debit Card</MenuItem>
-    <MenuItem value="Online">Online</MenuItem>
-  </Select>              </TableCell>
+              >{finances.paymentMode}
+            </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
@@ -394,17 +394,8 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
-              >
-  <Select
-    value={finances.status}
-    variant="standard"
-    onChange={(e) => handleStatusChange(finances._id, "status")(e)}
-    className="border p-1 rounded"
-  >
-    <MenuItem value="Pending">Pending</MenuItem>
-    <MenuItem value="Completed">Completed</MenuItem>
-    <MenuItem value="Failed">Failed</MenuItem>
-  </Select>
+              >{finances.status}
+  
                 
               </TableCell>
               <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
@@ -648,9 +639,9 @@ finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((financ
                           <Grid item xs={12} sm={6}>
                             <TextField
                               fullWidth
-                              label="transaction Date"
+                            //  label="transaction Date"
                               name="transactionDate"
-                             // type="number"
+                              type="Date"
                               value={addFormData.transactionDate}
                               onChange={handleAddInputChange('transactionDate')}
                               required

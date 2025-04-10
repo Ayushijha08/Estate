@@ -61,6 +61,8 @@ export const updateBooking = async (req, res) => {
         );
 
         res.json({
+            success:true,
+
             message: 'Booking updated successfully',
             Booking: updatedBooking
         });

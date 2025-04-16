@@ -219,9 +219,7 @@ const LeaseTable = () => {
   };
   return (
     <>
-      <h1
-className="heading"
->LEASE DETAILS</h1>
+    
   
     <div className='flex'>
     <TextField
@@ -256,6 +254,7 @@ className="heading"
     Add Lease
   </Button>
   </div>
+  <div className="table">
 
     <TableContainer
       component={Paper}
@@ -463,12 +462,13 @@ className="heading"
           {field === "paymentStatus" ? (
             <Select
               fullWidth
-              variant="standard"
+              variant="outlined"
+              label="Payment Status" 
               value={editFormData[field] || ""}
               onChange={(e) => handleEditInputChange(field)(e)}
               displayEmpty
             >
-              <MenuItem value="" disabled>Select Payment Status</MenuItem>
+             
               <MenuItem value="Paid">Paid</MenuItem>
             <MenuItem value="Unpaid">Unpaid</MenuItem>
             <MenuItem value="Partial">Partial</MenuItem>
@@ -477,8 +477,8 @@ className="heading"
             /* Lease Status Dropdown */
             <Select
               fullWidth
-              variant="standard"
-
+              variant="outlined"
+              label="Lease Status" 
               value={editFormData[field] || ""}
               onChange={(e) => handleEditInputChange(field)(e)}
               displayEmpty
@@ -522,8 +522,11 @@ className="heading"
             Are you sure you want to delete this lease?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button variant="outlined" onClick={handleCloseDeleteModal}>
-              CANCLE
+            <Button 
+                          sx={{backgroundColor:"gray",color:"white"}}
+
+            variant="outlined" onClick={handleCloseDeleteModal}>
+              CANCEL
             </Button>
             <Button
               variant="contained"
@@ -636,14 +639,14 @@ className="heading"
                             <FormControl fullWidth>
                               <InputLabel id="furnishing-label">paymentStatus</InputLabel>
                               <Select
-                               // labelId="furnishing-label"
                                 name="paymentStatus"
+                                label="Payment Status" 
                                 value={addFormData.paymentStatus}
                                 onChange={handleAddInputChange('paymentStatus')}
                                 required
                                 
                               >
-                                <MenuItem value="" disabled>Select Payment Status</MenuItem>
+                               
                                 <MenuItem value="Paid">Paid</MenuItem>
             <MenuItem value="Unpaid">Unpaid</MenuItem>
             <MenuItem value="Partial">Partial</MenuItem>
@@ -655,6 +658,7 @@ className="heading"
                               <InputLabel id="furnishing-label">LeaseStatus</InputLabel>
                               <Select
                                 labelId="furnishing-label"
+                                label="Lease Status" 
                                 name="LeaseStatus"
                                 value={addFormData.LeaseStatus}
                                 onChange={handleAddInputChange('LeaseStatus')}
@@ -690,6 +694,7 @@ className="heading"
                     </Modal>
             
     </TableContainer>
+    </div>
      <TablePagination
       rowsPerPageOptions={[5, 10, 25]}
       component="div"

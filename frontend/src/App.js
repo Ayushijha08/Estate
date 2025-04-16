@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUp from "./Auth/SignUp";
+import SignIn from "./Auth/SignIn";
+
 import Forgot from "./Auth/Forgot";
 import LayoutDashboard from "./Layout/LayoutDashboard";
 import LayoutProperty from "./Layout/LayoutProperty";
@@ -21,6 +23,8 @@ function App() {
       <Routes>
 
         <Route path="/sign-up" element={<SignUp />}/>
+        <Route path="/sign-in" element={<SignIn />}/>
+
         <Route path="/" element={<LayoutDashboard/>}/>
         <Route path="/Property" element={<LayoutProperty/>}/>
         <Route path="/Booking" element={<LayoutBooking/>}/>

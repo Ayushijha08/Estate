@@ -260,6 +260,7 @@ const ProjectTable = () => {
           Add project
         </Button>
       </div>
+      <div className="table">
 
       <TableContainer
         component={Paper}
@@ -474,7 +475,8 @@ const ProjectTable = () => {
                       <InputLabel>Status</InputLabel>
                       <Select
                         value={editFormData[field] || ""}
-                        variant="standard"
+                        variant="outlined"
+                        label="Status" 
                         onChange={handleEditInputChange(field)}
                       >
                         <MenuItem value="Available">Available</MenuItem>
@@ -514,7 +516,10 @@ const ProjectTable = () => {
               Are you sure you want to delete this project?
             </Typography>
             <Box display="flex" justifyContent="center" gap={2}>
-              <Button variant="outlined" onClick={handleCloseDeleteModal}>
+              <Button 
+                            sx={{backgroundColor:"gray",color:"white"}}
+
+              variant="outlined" onClick={handleCloseDeleteModal}>
                 CANCLE
               </Button>
               <Button
@@ -598,6 +603,7 @@ const ProjectTable = () => {
                         <Select
                           labelId="status-label"
                           name="status"
+                          label="Status" 
                           value={addFormData.status}
                           onChange={handleAddInputChange('status')}
                           required
@@ -630,6 +636,7 @@ const ProjectTable = () => {
               </Modal>
         
       </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

@@ -175,3 +175,9 @@ body{
         font-weight:500 ;
         white-space:noWrap;
       }
+      .table{
+
+        margin-right: 20px;
+        margin-left: 20px;
+      }
+      

@@ -260,6 +260,7 @@ const SiteVisitsTable = () => {
           Add  Visit
         </Button>
       </div>
+      <div className="table">
 
       <TableContainer
         component={Paper}
@@ -440,7 +441,7 @@ const SiteVisitsTable = () => {
             {selectedSiteVisits && (
               <Grid container spacing={2} mt={2}>
                 {Object.entries(selectedSiteVisits)
-                .filter(([key]) => key !== "createdAt" && key !== "updatedAt"&& key !== "_id"&& key !== "__v")
+                .filter(([key]) => key !== "createdAt" && key !== "updatedAt" && key !== "_id"&& key !== "__v")
                 .map(([key, value]) => (
                   <Grid item xs={6} key={key}>
                     <Typography>
@@ -473,7 +474,8 @@ const SiteVisitsTable = () => {
                       <InputLabel>Status</InputLabel>
                       <Select
                         value={editFormData[field] || ""}
-                        variant="standard"
+                        variant="outlined"
+                        label="Status" 
                         onChange={handleEditInputChange(field)}
                       >
                         <MenuItem value="Cancelled">Cancelled</MenuItem>
@@ -513,7 +515,10 @@ const SiteVisitsTable = () => {
               Are you sure you want to delete this SiteVisit?
             </Typography>
             <Box display="flex" justifyContent="center" gap={2}>
-              <Button variant="outlined" onClick={handleCloseDeleteModal}>
+              <Button 
+                            sx={{backgroundColor:"gray",color:"white"}}
+
+              variant="outlined" onClick={handleCloseDeleteModal}>
                 CANCEL
               </Button>
               <Button
@@ -597,6 +602,7 @@ const SiteVisitsTable = () => {
                         <Select
                           labelId="Status"
                           name="status"
+                          label="Status" 
                           value={addFormData.status}
                           onChange={handleAddInputChange('status')}
                           required
@@ -629,6 +635,7 @@ const SiteVisitsTable = () => {
               </Modal>
         
       </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

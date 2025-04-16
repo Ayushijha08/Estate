@@ -225,18 +225,6 @@ const SellersTable = () => {
       toast.error(error.response.data.message);
     }
   };
-  const handleStatusChange = (id, newStatus) => {
-    setSellers((prevSellers) =>
-      prevSellers.map((seller) =>
-        seller._id === id ? { ...seller, status: newStatus } : seller
-      )
-    );
-
-    // Also update edit form data if it's being edited
-    if (editFormData && editFormData._id === id) {
-      setEditFormData((prev) => ({ ...prev, status: newStatus }));
-    }
-  };
 
   return (
     <>
@@ -286,6 +274,7 @@ const SellersTable = () => {
           Add sellers
         </Button>
       </div>
+      <div className="table">
 
       <TableContainer
         component={Paper}
@@ -510,7 +499,6 @@ const SellersTable = () => {
         </Modal>
 
         {/* Edit Modal */}
-        {/* Edit Modal */}
         <Modal open={editModalOpen} onClose={handleCloseEditModal}>
           <Box sx={modalStyle}>
             <Box display="flex" justifyContent="space-between">
@@ -550,7 +538,7 @@ const SellersTable = () => {
                         fullWidth
                         variant="outlined"
                       />
-                    ) :   field === "email" ? (
+                    ) : field === "email" ? (
                       <TextField
                         label="E-mail"
                         value={editFormData[field] || ""}
@@ -558,15 +546,24 @@ const SellersTable = () => {
                         fullWidth
                         variant="outlined"
                       />
-                    ) :   field === "mobileNo" ? (
+                    ) :field === "mobileNo" ? (
                       <TextField
                         label="Mobile No"
+                        type="tel"
+                        inputProps={{ maxLength: 10, pattern: "[0-9]{10}" }}
                         value={editFormData[field] || ""}
-                        onChange={handleEditInputChange(field)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (/^\d{0,10}$/.test(value)) {
+                            handleEditInputChange(field)(e);
+                          }
+                        }}
                         fullWidth
                         variant="outlined"
+                        required
                       />
-                    ) :   field === "address" ? (
+                    )
+                     : field === "address" ? (
                       <TextField
                         label="Address"
                         value={editFormData[field] || ""}
@@ -574,15 +571,16 @@ const SellersTable = () => {
                         fullWidth
                         variant="outlined"
                       />
-                    ) :   field === "ListedPrice" ? (
+                    ) : field === "ListedPrice" ? (
                       <TextField
                         label="Listed Price"
+                        type="number"
                         value={editFormData[field] || ""}
                         onChange={handleEditInputChange(field)}
                         fullWidth
                         variant="outlined"
                       />
-                    ):   field === "PropertyId" ? (
+                    ) : field === "PropertyId" ? (
                       <TextField
                         label="Property Id"
                         value={editFormData[field] || ""}
@@ -590,7 +588,7 @@ const SellersTable = () => {
                         fullWidth
                         variant="outlined"
                       />
-                    ):(
+                    ) : (
                       <TextField
                         label={field}
                         value={editFormData[field] || ""}
@@ -623,7 +621,10 @@ const SellersTable = () => {
               Are you sure you want to delete this sellers?
             </Typography>
             <Box display="flex" justifyContent="center" gap={2}>
-              <Button variant="outlined" onClick={handleCloseDeleteModal}>
+              <Button 
+                            sx={{backgroundColor:"gray",color:"white"}}
+
+              variant="outlined" onClick={handleCloseDeleteModal}>
                 CANCLE
               </Button>
               <Button
@@ -679,8 +680,15 @@ const SellersTable = () => {
                   fullWidth
                   label="Mobile No"
                   name="mobileNo"
+                  type="tel"
+                  inputProps={{ maxLength: 10, pattern: "[0-9]{10}" }}
                   value={addFormData.mobileNo}
-                  onChange={handleAddInputChange("mobileNo")}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d{0,10}$/.test(value)) {
+                      handleAddInputChange("mobileNo")(e);
+                    }
+                  }}
                   required
                 />
               </Grid>
@@ -723,6 +731,7 @@ const SellersTable = () => {
                   <InputLabel id="furnishing-label">Status</InputLabel>
                   <Select
                     labelId="furnishing-label"
+                    label="Status"
                     name="Status"
                     value={addFormData.Status}
                     onChange={handleAddInputChange("Status")}
@@ -735,7 +744,8 @@ const SellersTable = () => {
               </Grid>
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="flex-end" gap={2}>
-                  <Button variant="outlined" onClick={handleCloseAddModal}>
+                  <Button
+                   variant="outlined" onClick={handleCloseAddModal}>
                     Cancel
                   </Button>
                   <Button
@@ -751,6 +761,7 @@ const SellersTable = () => {
           </Box>
         </Modal>
       </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

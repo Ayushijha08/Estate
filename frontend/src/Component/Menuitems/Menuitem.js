@@ -1,17 +1,17 @@
 const Menuitems = [
     
     {
-        icon: '/sidebar/dashboard.png',
+        icon: '/sidebar/layout.png',
         label: "Dashboard",
         href: "/",
     },
     {
-      icon: '/sidebar/town.png',
+      icon: '/sidebar/residential.png',
       label: "Property",
       href: "/property",
     },
     {
-       icon: "/sidebar/assets.png",
+       icon: "/sidebar/businessman.png",
        label: "Sellers",
        href: "/sellers",
       },
@@ -21,7 +21,7 @@ const Menuitems = [
       href: "/booking",
     },
     {
-      icon: "/sidebar/rent.png",
+      icon: "/sidebar/house.png",
       label: "Lease",
       href: "/lease",
     },
@@ -31,22 +31,22 @@ const Menuitems = [
       href: "/Agent",
     },
     {
-      icon: "/sidebar/financial-profit.png",
+      icon: "/sidebar/budget.png",
       label: "Finance",
       href: "/finance",
     },
     {
-        icon: "/sidebar/partner.png",
+        icon: "/sidebar/customer.png",
         label: "Buyer",
         href: "/buyers",
       },
       {
-        icon: "/sidebar/partner.png",
+        icon: "/sidebar/project.png",
         label: "Projects",
         href: "/project",
       },
       {
-        icon: "/sidebar/partner.png",
+        icon: "/sidebar/global.png",
         label: "Site Visits",
         href: "/SiteVisits",
       },

@@ -11,6 +11,7 @@ const Sidebar=()=>
     
 
     return (
+        
         <>
             
            <div className="sidebar">
@@ -19,8 +20,8 @@ const Sidebar=()=>
               src={"/logo.png"} 
               alt="logo"
               className="logos"
-              width={250} 
-              height={95} 
+              width={210} 
+              height={85} 
              // style={{background:"black"}}
 
             />
@@ -33,6 +34,7 @@ const Sidebar=()=>
               src={item.icon} 
               alt={item.label} 
               width={20} 
+              
               height={20} 
               style={{ filter: "brightness(0) invert(1)" } }
             />

@@ -219,8 +219,7 @@ const PropertyTable = () => {
 
   return (
     <>
-    <h1
-    className="heading">PROPERTY DETAILS</h1>
+   
       <div className="flex">
         <TextField
           className="search"
@@ -265,12 +264,17 @@ const PropertyTable = () => {
           Add Property
         </Button>
       </div>
-
+<div className="table">
       <TableContainer
         component={Paper}
-        style={{ overflowX: "auto", maxWidth: 1250 ,marginTop:"0"}}
+        className="pink"
+
+        style={{ overflowX: "auto", maxWidth: 1250 ,marginTop:"0",marginRight:"0px"}}
       >
-        <Table className="w-full border border-gray-300">
+        <Table 
+        //className="w-full border border-gray-300"
+        className="table"
+        sx={{padding:"50px"}}>
           <TableHead
             sx={{
               top: 0,
@@ -278,6 +282,7 @@ const PropertyTable = () => {
               zIndex: 2,
               position: "sticky",
               fontWeight: "bold",
+              padding:"30px",
               whiteSpace: "nowrap",
             }}
           >
@@ -480,83 +485,87 @@ const PropertyTable = () => {
               </IconButton>
             </Box>
             <Grid container spacing={2} mt={2}>
-              {Object.keys(editFormData)
-              .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
-
-              .map((field) => (
-                <Grid item xs={6} key={field}>
-                  {field === "propertyTitle" ? (
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Property Title
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                       // variant="standard"
-                        value={editFormData[field] || ""}
-                        onChange={handleEditInputChange(field)}
-                      >
-                        <MenuItem value="Luxury">Luxury</MenuItem>
-                        <MenuItem value="3BHK">3BHK</MenuItem>
-                        <MenuItem value="Apartment">Apartment</MenuItem>
-                      </Select>
-                    </FormControl>
-                  ) : field === "propertyType" ? (
-                    <FormControl fullWidth>
-                      <InputLabel>Property Type</InputLabel>
-                      <Select
-                        value={editFormData[field] || ""}
-                       // variant="standard"
-                        onChange={handleEditInputChange(field)}
-                      >
-                        <MenuItem value="Apartment">Apartment</MenuItem>
-                        <MenuItem value="House">House</MenuItem>
-                        <MenuItem value="Commercial">Commercial</MenuItem>
-                        <MenuItem value="Land">Land</MenuItem>
-                        <MenuItem value="Office">Office</MenuItem>
-                        <MenuItem value="Villa">Villa</MenuItem>
-                      </Select>
-                    </FormControl>
-                  ) : field === "furnishing" ? (
-                    <FormControl fullWidth>
-                      <InputLabel>Furnishing</InputLabel>
-                      <Select
-                        value={editFormData[field] || ""}
-                      //  variant="standard"
-                        onChange={handleEditInputChange(field)}
-                      >
-                        <MenuItem value="Furnished">Furnished</MenuItem>
-                        <MenuItem value="Semi-Furnished">
-                          Semi-Furnished
-                        </MenuItem>
-                        <MenuItem value="Unfurnished">Unfurnished</MenuItem>
-                      </Select>
-                    </FormControl>
-                  ) : field === "status" ? (
-                    <FormControl fullWidth>
-                      <InputLabel>Status</InputLabel>
-                      <Select
-                        value={editFormData[field] || ""}
-                        variant="standard"
-                        onChange={handleEditInputChange(field)}
-                      >
-                        <MenuItem value="Available">Available</MenuItem>
-                        <MenuItem value="Sold">Sold</MenuItem>
-                        <MenuItem value="Rented">Rented</MenuItem>
-                      </Select>
-                    </FormControl>
-                  ) : (
-                    <TextField
-                      label={field.charAt(0).toUpperCase() + field.slice(1)}
-                      value={editFormData[field] || ""}
-                      onChange={handleEditInputChange(field)}
-                      fullWidth
-                    />
-                  )}
-                </Grid>
-              ))}
-            </Grid>
+            {Object.keys(editFormData)
+  .filter(
+    (field) =>
+      field !== "createdAt" &&
+      field !== "updatedAt" &&
+      field !== "__v" &&
+      field !== "_id"
+  )
+  .map((field) => (
+    <Grid item xs={6} key={field}>
+      {field === "propertyTitle" ? (
+        <FormControl fullWidth>
+          <InputLabel>Property Title</InputLabel>
+          <Select
+            label="Property Title"
+            value={editFormData[field] || ""}
+            onChange={handleEditInputChange(field)}
+          >
+            <MenuItem value="Luxury">Luxury</MenuItem>
+            <MenuItem value="3BHK">3BHK</MenuItem>
+            <MenuItem value="Apartment">Apartment</MenuItem>
+          </Select>
+        </FormControl>
+      ) : field === "propertyType" ? (
+        <FormControl fullWidth>
+          <InputLabel>Property Type</InputLabel>
+          <Select
+            label="Property Type"
+            value={editFormData[field] || ""}
+            onChange={handleEditInputChange(field)}
+          >
+            <MenuItem value="Apartment">Apartment</MenuItem>
+            <MenuItem value="House">House</MenuItem>
+            <MenuItem value="Commercial">Commercial</MenuItem>
+            <MenuItem value="Land">Land</MenuItem>
+            <MenuItem value="Office">Office</MenuItem>
+            <MenuItem value="Villa">Villa</MenuItem>
+          </Select>
+        </FormControl>
+      ) : field === "furnishing" ? (
+        <FormControl fullWidth>
+          <InputLabel>Furnishing</InputLabel>
+          <Select
+            label="Furnishing"
+            value={editFormData[field] || ""}
+            onChange={handleEditInputChange(field)}
+          >
+            <MenuItem value="Furnished">Furnished</MenuItem>
+            <MenuItem value="Semi-Furnished">Semi-Furnished</MenuItem>
+            <MenuItem value="Unfurnished">Unfurnished</MenuItem>
+          </Select>
+        </FormControl>
+      ) : field === "status" ? (
+        <FormControl fullWidth>
+          <InputLabel>Status</InputLabel>
+          <Select
+            label="Status"
+            value={editFormData[field] || ""}
+            onChange={handleEditInputChange(field)}
+          >
+            <MenuItem value="Available">Available</MenuItem>
+            <MenuItem value="Sold">Sold</MenuItem>
+            <MenuItem value="Rented">Rented</MenuItem>
+          </Select>
+        </FormControl>
+      ) : (
+        <TextField
+          type={field === "price" || field === "areaSqft" ? "number" : "text"}
+          label={
+            field === "areaSqft"
+              ? "Area (Sqft)"
+              : field.charAt(0).toUpperCase() + field.slice(1)
+          }
+          value={editFormData[field] || ""}
+          onChange={handleEditInputChange(field)}
+          fullWidth
+        />
+      )}
+    </Grid>
+  ))}
+</Grid>
             <Box display="flex" justifyContent="flex-end" mt={3}>
               <Button variant="outlined" onClick={handleCloseEditModal}>
                 Cancel
@@ -578,8 +587,10 @@ const PropertyTable = () => {
               Are you sure you want to delete this property?
             </Typography>
             <Box display="flex" justifyContent="center" gap={2}>
-              <Button variant="outlined" onClick={handleCloseDeleteModal}>
-                CANCLE
+              <Button 
+              sx={{backgroundColor:"gray",color:"white"}}
+              variant="outlined" onClick={handleCloseDeleteModal}>
+                CANCEL
               </Button>
               <Button
                 variant="contained"
@@ -591,6 +602,7 @@ const PropertyTable = () => {
             </Box>
           </Box>
         </Modal>
+        {/*Add modal*/}
          <Modal open={addModalOpen} onClose={handleCloseAddModal}>
                 <Box sx={modalStyle}>
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -606,6 +618,7 @@ const PropertyTable = () => {
                         <Select
                           labelId="property-title-label"
                           name="propertyTitle"
+                          label="Property Title" 
                           value={addFormData.propertyTitle}
                           onChange={handleAddInputChange('propertyTitle')}
                           required
@@ -622,6 +635,7 @@ const PropertyTable = () => {
                         <Select
                           labelId="property-type-label"
                           name="propertyType"
+                          label="Property Type" 
                           value={addFormData.propertyType}
                           onChange={handleAddInputChange('propertyType')}
                           required
@@ -638,6 +652,7 @@ const PropertyTable = () => {
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
+                        type="String"
                         label="Address"
                         name="address"
                         value={addFormData.address}
@@ -672,6 +687,7 @@ const PropertyTable = () => {
                         <InputLabel id="furnishing-label">Furnishing</InputLabel>
                         <Select
                           labelId="furnishing-label"
+                          label="Furnishing" 
                           name="furnishing"
                           value={addFormData.furnishing}
                           onChange={handleAddInputChange('furnishing')}
@@ -690,6 +706,7 @@ const PropertyTable = () => {
                         <Select
                           labelId="status-label"
                           name="status"
+                          label="Status" 
                           value={addFormData.status}
                           onChange={handleAddInputChange('status')}
                           required
@@ -722,6 +739,7 @@ const PropertyTable = () => {
               </Modal>
         
       </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

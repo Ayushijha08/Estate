@@ -516,8 +516,11 @@ className="heading"
               Are you sure you want to delete this buyer?
             </Typography>
             <Box display="flex" justifyContent="center" gap={2}>
-              <Button variant="outlined" onClick={handleCloseDeleteModal}>
-                CANCLE
+              <Button 
+                            sx={{backgroundColor:"gray",color:"white"}}
+
+              variant="outlined" onClick={handleCloseDeleteModal}>
+                CANCEL
               </Button>
               <Button
                 variant="contained"
@@ -599,6 +602,7 @@ className="heading"
                         <Select
                           labelId="furnishing-label"
                           name="status"
+                           label="Status"
                           value={addFormData.status}
                           onChange={handleAddInputChange('status')}
                           required

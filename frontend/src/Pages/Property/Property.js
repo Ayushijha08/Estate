@@ -239,7 +239,7 @@ const PropertyTable = () => {
           // marginTop:"10px",
             width: "160px",
             display: "flex",
-            marginRight: "150px",
+            marginRight: "170px",
             justifyContent: "flex-end",
             marginLeft: "800px",
           }}
@@ -259,6 +259,7 @@ const PropertyTable = () => {
             borderRadius: "5px",
             height: "55px",
             width: "130px",
+            marginRight:"18px"
           }}
         >
           Add Property
@@ -590,14 +591,14 @@ const PropertyTable = () => {
               <Button 
               sx={{backgroundColor:"gray",color:"white"}}
               variant="outlined" onClick={handleCloseDeleteModal}>
-                CANCEL
+                Cancel
               </Button>
               <Button
                 variant="contained"
                 color="error"
                 onClick={handleConfirmDelete}
               >
-                DELETE
+                Delete
               </Button>
             </Box>
           </Box>
@@ -651,6 +652,11 @@ const PropertyTable = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
+                       sx={{
+                        '& .MuiInputLabel-asterisk': {
+                          color: 'red',
+                        },
+                      }}
                         fullWidth
                         type="String"
                         label="Address"
@@ -662,6 +668,11 @@ const PropertyTable = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
+                       sx={{
+                        '& .MuiInputLabel-asterisk': {
+                          color: 'red',
+                        },
+                      }}
                         fullWidth
                         label="Price"
                         name="price"
@@ -673,6 +684,11 @@ const PropertyTable = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
+                       sx={{
+                        '& .MuiInputLabel-asterisk': {
+                          color: 'red',
+                        },
+                      }}
                         fullWidth
                         label="Area (Sqft)"
                         name="areaSqft"
@@ -692,6 +708,11 @@ const PropertyTable = () => {
                           value={addFormData.furnishing}
                           onChange={handleAddInputChange('furnishing')}
                           required
+                          sx={{
+                            '& .MuiInputLabel-asterisk': {
+                              color: 'red',
+                            },
+                          }}
                           
                         >
                           <MenuItem value="Furnished">Furnished</MenuItem>

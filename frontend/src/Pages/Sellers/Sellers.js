@@ -228,7 +228,6 @@ const SellersTable = () => {
 
   return (
     <>
-      <h1 className="heading">SELLER DETAILS</h1>
 
       <div className="flex">
         <TextField
@@ -251,7 +250,7 @@ const SellersTable = () => {
             marginBottom: "9px",
             width: "160px",
             display: "flex",
-            marginRight: "150px",
+            marginRight: "160px",
             justifyContent: "flex-end",
             marginLeft: "800px",
           }}
@@ -267,6 +266,8 @@ const SellersTable = () => {
             marginLeft: "40px",
             padding: "10px",
             borderRadius: "5px",
+            marginRight:"17px",
+
             height: "55px",
             width: "130px",
           }}
@@ -655,6 +656,11 @@ const SellersTable = () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
+                 sx={{
+                  '& .MuiInputLabel-asterisk': {
+                    color: 'red',
+                  },
+                }}
                   fullWidth
                   label="Name"
                   name="name"
@@ -666,6 +672,11 @@ const SellersTable = () => {
 
               <Grid item xs={12}>
                 <TextField
+                 sx={{
+                  '& .MuiInputLabel-asterisk': {
+                    color: 'red',
+                  },
+                }}
                   fullWidth
                   label="E-mail"
                   name="email"
@@ -677,6 +688,11 @@ const SellersTable = () => {
 
               <Grid item xs={12}>
                 <TextField
+                 sx={{
+                  '& .MuiInputLabel-asterisk': {
+                    color: 'red',
+                  },
+                }}
                   fullWidth
                   label="Mobile No"
                   name="mobileNo"
@@ -696,6 +712,11 @@ const SellersTable = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
+                  sx={{
+                    '& .MuiInputLabel-asterisk': {
+                      color: 'red',
+                    },
+                  }}
                   label="Address"
                   name="address"
                   value={addFormData.address}
@@ -705,6 +726,11 @@ const SellersTable = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                 sx={{
+                  '& .MuiInputLabel-asterisk': {
+                    color: 'red',
+                  },
+                }}
                   fullWidth
                   label="Property Id"
                   name="PropertyId"
@@ -719,7 +745,7 @@ const SellersTable = () => {
                   fullWidth
                   label="ListedPrice"
                   name="ListedPrice"
-                  // type="number"
+                  type="number"
                   value={addFormData.ListedPrice}
                   onChange={handleAddInputChange("ListedPrice")}
                   required

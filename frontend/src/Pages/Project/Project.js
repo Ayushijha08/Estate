@@ -214,8 +214,6 @@ const ProjectTable = () => {
 
   return (
     <>
-    <h1
-    className="heading">project DETAILS</h1>
       <div className="flex">
         <TextField
           className="search"
@@ -235,7 +233,7 @@ const ProjectTable = () => {
           // marginTop:"10px",
             width: "160px",
             display: "flex",
-            marginRight: "150px",
+            marginRight: "160px",
             justifyContent: "flex-end",
             marginLeft: "800px",
           }}
@@ -255,6 +253,8 @@ const ProjectTable = () => {
             borderRadius: "5px",
             height: "55px",
             width: "130px",
+            marginRight:"18px"
+
           }}
         >
           Add project

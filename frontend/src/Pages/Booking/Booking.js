@@ -243,7 +243,6 @@ const BookingTable = () => {
   };
   return (
     <>
-      <h1 className="heading">BOOKING DETAILS</h1>
 
       <div className="flex">
         <TextField
@@ -266,7 +265,7 @@ const BookingTable = () => {
             marginBottom: "9px",
             width: "160px",
             display: "flex",
-            marginRight: "150px",
+            marginRight: "160px",
             justifyContent: "flex-end",
             marginLeft: "800px",
           }}
@@ -284,11 +283,14 @@ const BookingTable = () => {
             borderRadius: "5px",
             height: "55px",
             width: "130px",
+            marginRight:"18px"
+
           }}
         >
           Add Booking
         </Button>
       </div>
+      <div className="table">
 
       <TableContainer
         component={Paper}
@@ -874,6 +876,7 @@ const BookingTable = () => {
           </Box>
         </Modal>
       </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

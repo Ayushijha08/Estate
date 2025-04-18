@@ -21,7 +21,7 @@ const ProjectSchema = new Schema(
             required: true,
         },
         EndDate: {
-            type: Number,
+            type: String,
             required: true,
         },
         TotalUnits: {

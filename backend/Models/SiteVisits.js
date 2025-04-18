@@ -21,7 +21,7 @@ const SiteVisitsSchema = new Schema(
             required: true,
         },
         SheduledDate: {
-            type: Number,
+            type: Date,
             required: true,
         },
        

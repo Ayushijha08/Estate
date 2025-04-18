@@ -214,9 +214,7 @@ const SiteVisitsTable = () => {
 
   return (
     <>
-    <h1
-    className="heading">SiteVisit DETAILS</h1>
-      <div className="flex">
+     <div className="flex">
         <TextField
           className="search"
           label="Search"
@@ -235,7 +233,7 @@ const SiteVisitsTable = () => {
           // marginTop:"10px",
             width: "160px",
             display: "flex",
-            marginRight: "150px",
+            marginRight: "160px",
             justifyContent: "flex-end",
             marginLeft: "800px",
           }}
@@ -255,6 +253,8 @@ const SiteVisitsTable = () => {
             borderRadius: "5px",
             height: "55px",
             width: "130px",
+            marginRight:"18px"
+
           }}
         >
           Add  Visit
@@ -519,14 +519,14 @@ const SiteVisitsTable = () => {
                             sx={{backgroundColor:"gray",color:"white"}}
 
               variant="outlined" onClick={handleCloseDeleteModal}>
-                CANCEL
+                Cancel
               </Button>
               <Button
                 variant="contained"
                 color="error"
                 onClick={handleConfirmDelete}
               >
-                DELETE
+                Delete
               </Button>
             </Box>
           </Box>
@@ -556,7 +556,7 @@ const SiteVisitsTable = () => {
                         fullWidth
                         label="Visitor Name"
                         name="VisitorName"
-                       // type="number"
+                       type="string"
                         value={addFormData.VisitorName}
                         onChange={handleAddInputChange('VisitorName')}
                         required
@@ -567,7 +567,7 @@ const SiteVisitsTable = () => {
                         fullWidth
                         label="Contact No"
                         name="ContactNo"
-                        type="number"
+                        type="string"
                         value={addFormData.ContactNo}
                         onChange={handleAddInputChange('ContactNo')}
                         required
@@ -578,7 +578,7 @@ const SiteVisitsTable = () => {
                         fullWidth
                         label="Agent Id"
                         name="AgentId"
-                        //type="number"
+                        type="string"
                         value={addFormData.AgentId}
                         onChange={handleAddInputChange('AgentId')}
                         required
@@ -589,7 +589,7 @@ const SiteVisitsTable = () => {
                         fullWidth
                         label="Sheduled Date"
                         name="SheduledDate"
-                        //type="number"
+                        type="date"
                         value={addFormData.SheduledDate}
                         onChange={handleAddInputChange('SheduledDate')}
                         required

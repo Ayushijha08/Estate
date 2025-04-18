@@ -228,9 +228,7 @@ const BuyersTable = () => {
   };
   return (
     <>
-      <h1
-className="heading"
->BUYER DETAILS</h1>
+    
   
       <div className="flex">
         <TextField
@@ -253,7 +251,7 @@ className="heading"
             marginBottom: "9px",
             width: "160px",
             display: "flex",
-            marginRight: "150px",
+            marginRight: "160px",
             justifyContent: "flex-end",
             marginLeft: "800px",
           }}
@@ -270,6 +268,8 @@ className="heading"
             borderRadius: "5px",
             height: "55px",
             width: "130px",
+            marginRight:"18px"
+
           }}
         >
           Add Buyer
@@ -520,14 +520,14 @@ className="heading"
                             sx={{backgroundColor:"gray",color:"white"}}
 
               variant="outlined" onClick={handleCloseDeleteModal}>
-                CANCEL
+                Cancel
               </Button>
               <Button
                 variant="contained"
                 color="error"
                 onClick={handleConfirmDelete}
               >
-                DELETE
+                Delete
               </Button>
             </Box>
           </Box>

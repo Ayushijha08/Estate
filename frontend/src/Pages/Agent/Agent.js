@@ -225,16 +225,9 @@ const AgentTable = () => {
       toast.error(error.response.data.message);
     }
   };
-  const handleStatusChange = (id, newStatus) => {
-    setAgents((prev) =>
-      prev.map((Agents) =>
-        Agents.id === id ? { ...Agents, status: newStatus } : Agents
-      )
-    );
-  };
+  
   return (
     <>
-      <h1 className="heading">AGENT DETAILS</h1>
 
       <div className="flex">
         <TextField
@@ -278,6 +271,7 @@ const AgentTable = () => {
           Add Agent
         </Button>
       </div>
+      <div className="table">
 
       <TableContainer
         component={Paper}
@@ -724,6 +718,7 @@ const AgentTable = () => {
           </Box>
         </Modal>
       </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

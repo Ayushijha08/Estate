@@ -141,6 +141,8 @@ const SiteVisitsTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page
   };
+  
+  
   const fieldLabels = {
     PropertyId: " Property Id",
     VisitorName: " Visitor Name",
@@ -214,11 +216,13 @@ const SiteVisitsTable = () => {
 
   return (
     <>
+    <div className="table">
      <div className="flex">
         <TextField
           className="search"
           label="Search"
           variant="outlined"
+                    size="small"
           value={searchTerm}
           onChange={handleSearchChange}
           InputProps={{
@@ -228,34 +232,15 @@ const SiteVisitsTable = () => {
               </InputAdornment>
             ),
           }}
-          style={{
-           marginBottom: "9px",
-          // marginTop:"10px",
-            width: "160px",
-            display: "flex",
-            marginRight: "160px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
+
         />
 
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          // color="primary"
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "nowrap",
-            display: "flex",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            height: "55px",
-            width: "130px",
-            marginRight:"18px"
+          className="primary_button"
 
-          }}
         >
           Add  Visit
         </Button>
@@ -377,7 +362,7 @@ const SiteVisitsTable = () => {
                       }}
                       className="border p-2"
                     >
-                      {SiteVisit.SheduledDate}
+                    {SiteVisit.SheduledDate}
                     </TableCell>
                     
                     <TableCell
@@ -409,7 +394,7 @@ const SiteVisitsTable = () => {
                           <Visibility />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "green" }}
+                          sx={{ color: "gray" }}
                           onClick={() => handleEdit(SiteVisit)}
                         >
                           <Edit />
@@ -593,6 +578,9 @@ const SiteVisitsTable = () => {
                         value={addFormData.SheduledDate}
                         onChange={handleAddInputChange('SheduledDate')}
                         required
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                       />
                     </Grid>
                    
@@ -635,6 +623,7 @@ const SiteVisitsTable = () => {
               </Modal>
         
       </TableContainer>
+      </div>
       </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

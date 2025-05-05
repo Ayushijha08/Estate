@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import TablePagination from "@mui/material/TablePagination";
+import AddIcon from "@mui/icons-material/Add";
 
 import {
   Table,
@@ -230,11 +231,9 @@ const FinanceTable = () => {
       <div className="flex">
         <TextField
           className="search"
+                    size="small"
           label="Search"
           variant="outlined"
-          // fullWidth
-          //  value={searchQuery}
-          // onChange={handleSearchChange}
           value={searchTerm}
           onChange={handleSearchChange}
           InputProps={{
@@ -244,29 +243,13 @@ const FinanceTable = () => {
               </InputAdornment>
             ),
           }}
-          style={{
-            marginBottom: "9px",
-            width: "160px",
-            display: "flex",
-            marginRight: "150px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
         />
 
         <Button
           variant="contained"
-          // color="primary"
+          className="primary_button"
+          startIcon={<AddIcon />}
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "wrap",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            height: "55px",
-            width: "130px",
-          }}
         >
           Add finance
         </Button>
@@ -453,7 +436,7 @@ const FinanceTable = () => {
                             <Visibility />
                           </IconButton>
                           <IconButton
-                            sx={{ color: "green" }}
+                            sx={{ color: "gray" }}
                             onClick={() => handleEdit(finances)}
                           >
                             <Edit />

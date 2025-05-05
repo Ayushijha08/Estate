@@ -218,49 +218,31 @@ const PropertyTable = () => {
   
 
   return (
-    <>
-   
+    
+ <>
+  <div className="table">
       <div className="flex">
         <TextField
           className="search"
           label="Search"
           variant="outlined"
+          size="small"
           value={searchTerm}
           onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="end">
                 <SearchIcon />
               </InputAdornment>
             ),
-          }}
-          style={{
-           marginBottom: "9px",
-          // marginTop:"10px",
-            width: "160px",
-            display: "flex",
-            marginRight: "170px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
           }}
         />
 
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          // color="primary"
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "nowrap",
-            display: "flex",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            height: "55px",
-            width: "130px",
-            marginRight:"18px"
-          }}
+          className="primary_button"
         >
           Add Property
         </Button>
@@ -269,21 +251,18 @@ const PropertyTable = () => {
       <TableContainer
         component={Paper}
         className="pink"
-
-        style={{ overflowX: "auto", maxWidth: 1250 ,marginTop:"0",marginRight:"0px"}}
       >
         <Table 
-        //className="w-full border border-gray-300"
-        className="table"
-        sx={{padding:"50px"}}>
+        
+        sx={{padding:"20px"}}>
           <TableHead
             sx={{
               top: 0,
-              background: "white",
+            //  background: "#f5f7fa",
               zIndex: 2,
               position: "sticky",
               fontWeight: "bold",
-              padding:"30px",
+              padding:"16px",
               whiteSpace: "nowrap",
             }}
           >
@@ -328,12 +307,18 @@ const PropertyTable = () => {
                   <TableRow
                     key={property._id}
                     className="text-center"
-                    sx={{ fontWeight: "bold" }}
+                    sx={{ 
+                      fontWeight: "500",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        backgroundColor: "rgba(12, 12, 101, 0.05)"
+                      }
+                    }}
                   >
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
@@ -342,30 +327,28 @@ const PropertyTable = () => {
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
                     >
                       {property.propertyTitle}
-                     
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
                     >
                       {property.propertyType}
-                      
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
@@ -374,8 +357,8 @@ const PropertyTable = () => {
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
@@ -384,8 +367,8 @@ const PropertyTable = () => {
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
@@ -394,50 +377,50 @@ const PropertyTable = () => {
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
-                    >{property.furnishing}
-                      
+                    >
+                      {property.furnishing}
                     </TableCell>
                     <TableCell
                       sx={{
-                        padding: "4px",
-                        fontSize: "12px",
+                        padding: "16px",
+                        fontSize: "14px",
                         textAlign: "center",
                       }}
                       className="border p-2"
-                    >{property.status}
-
+                    >
+                      {property.status}
                     </TableCell>
                     <TableCell
                       sx={{ fontWeight: "bolder" }}
                       className="border p-2"
                     >
                       <TableContainer
-                        style={{
+                        sx={{
                           display: "flex",
-                          gap: "5px",
+                          gap: "2px",
                           justifyContent: "center",
                         }}
                       >
                         <IconButton
-                          sx={{ color: "blue" }}
-                          fontweight="bolder"
+                          className="view"
                           onClick={() => handleView(property)}
                         >
                           <Visibility />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "green" }}
+                          sx={{ color: "gray" }}
+                          className="edit"
                           onClick={() => handleEdit(property)}
                         >
                           <Edit />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "red" }}
+                          className="delete"
                           onClick={() => handleDelete(property)}
                         >
                           <Delete />
@@ -568,7 +551,9 @@ const PropertyTable = () => {
   ))}
 </Grid>
             <Box display="flex" justifyContent="flex-end" mt={3}>
-              <Button variant="outlined" onClick={handleCloseEditModal}>
+              <Button
+              sx={{backgroundColor:"rgb(128,128,128)",color:"rgb(248,248,255)"}}
+              variant="Standard" onClick={handleCloseEditModal}>
                 Cancel
               </Button>
               <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
@@ -741,12 +726,14 @@ const PropertyTable = () => {
                     <Grid item xs={12}>
                       <Box display="flex" justifyContent="flex-end" gap={2}>
                         <Button 
-                          variant="outlined" 
+                          variant="standard" 
                           onClick={handleCloseAddModal}
+                          sx={{backgroundColor:"rgb(128,128,128)",color:"rgb(248,248,255)"}}
                         >
                           Cancel
                         </Button>
-                        <Button 
+                        <Button
+                        sx={{backgroundColor:"rgb(4,4,44)"}} 
                           variant="contained" 
                           color="primary"
                           onClick={handleAddProperty}
@@ -761,6 +748,7 @@ const PropertyTable = () => {
         
       </TableContainer>
       </div>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -770,7 +758,8 @@ const PropertyTable = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </>
+      </>
+    
   );
 };
 

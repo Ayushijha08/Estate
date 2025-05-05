@@ -1,29 +1,14 @@
+
 import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
-const UserSchema = new Schema(
-    { 
-       name: {
-         type: String,
-        required: true,
-    },
-        email: {
-            type: String,
-            required: true,
-            lowercase: true
+const userSchema = new Schema({
 
-            
-        },
-        password: {
-            type: String,
-            required: true,
-        },
-        
-    },
-    { timestamps: true }
-);
+    Email: {type:String},
+    Password:{type:String}
+  
+}, { timestamps: true }); // Correct placement of timestamps
 
-const User = model('User', UserSchema);
-
+const User = model('user', userSchema);
 export default User;

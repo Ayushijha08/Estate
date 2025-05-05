@@ -1,28 +1,44 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Box, Button, TextField } from "@mui/material";
+import { useAuth } from "./AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Box, Button, TextField } from "@mui/material";
-import { Link } from 'react-router-dom';
 
 const SignIn = () => {
-  const [addFormData, setAddFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
     try {
-      const response = await axios.post('http://localhost:3001/User/login', addFormData);
+      console.log('Sending login request with:', { Email: email, Password: password });
+      const response = await axios.post("http://localhost:3001/user/login", {
+        Email: email,
+        Password: password
+      });
+      
+      console.log('Login response:', response.data);
+      
       if (response.data.success) {
-        toast.success('Login successfully!');
-        setAddFormData({
-          email: '',
-          password: '',
+        console.log('Login successful, token:', response.data.token);
+        login(response.data.token, {
+          id: response.data.userId,
+          email: email
         });
+        toast.success("Login successful!");
+      } else {
+        console.log('Login failed:', response.data.message);
+        toast.error(response.data.message || "Login failed");
       }
     } catch (error) {
-      console.error('Error Logging in:', error);
-      toast.error(error.response?.data?.message || 'Failed to Login');
+      console.error("Login error:", error);
+      toast.error(error.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,18 +50,19 @@ const SignIn = () => {
         noValidate
         autoComplete="off"
         className="register"
+        onSubmit={handleSubmit}
       >
         <Box className="header_title">Login</Box>
 
-        <Box className="signUp">
+        <Box className="signIn">
           <TextField
             type="email"
             required
             id="email"
             variant="standard"
             label="Enter Email Id"
-            value={addFormData.email}
-            onChange={(e) => setAddFormData({ ...addFormData, email: e.target.value })}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <TextField
@@ -54,20 +71,18 @@ const SignIn = () => {
             variant="standard"
             id="password"
             label="Enter Password"
-            value={addFormData.password}
-            onChange={(e) => setAddFormData({ ...addFormData, password: e.target.value })}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button className="primary_button" onClick={handleLogin}>
-            Log In
+          <Button 
+            type="submit"
+            className="primary_button" 
+            sx={{ width: "400px" }}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
           </Button>
-
-         
-          <Box className="account">
-  <Link to="/sign-up" style={{ textDecoration: 'none', color: '#1976d2' }}>
-  Don't have an account? Sign up
-  </Link>
-</Box>
         </Box>
       </Box>
     </>

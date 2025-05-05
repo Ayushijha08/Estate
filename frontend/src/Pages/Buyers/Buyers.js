@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+
 import TablePagination from "@mui/material/TablePagination";
 
 import {
@@ -58,19 +60,19 @@ const BuyersTable = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-      const [addModalOpen, setAddModalOpen] = useState(false);
-  
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
   const [selectedBuyer, setSelectedBuyer] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [addFormData, setAddFormData] = useState({
-    name: '',
-    email: '',
-    mobileNo: '',
-    address: '',
-    RoomNo: '',
-    status: 'active',
-      });
-     
+    name: "",
+    email: "",
+    mobileNo: "",
+    address: "",
+    RoomNo: "",
+    status: "active",
+  });
+
   const [buyers, setBuyers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [apiBuyers, setApiBuyers] = useState([]);
@@ -107,7 +109,6 @@ const BuyersTable = () => {
     setAddModalOpen(true);
   };
 
-
   const handleCloseViewModal = () => setViewModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
@@ -129,28 +130,29 @@ const BuyersTable = () => {
 
   const handleAddBuyer = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/buyer/createBuyer', addFormData);
+      const response = await axios.post(
+        "http://localhost:3001/buyer/createBuyer",
+        addFormData
+      );
       if (response.data.success) {
-        toast.success('Buyer added successfully!');
+        toast.success("Buyer added successfully!");
         handleCloseAddModal();
         getAllbuyers();
         // Reset form data
         setAddFormData({
-
-      name: '',
-      email: '',
-      mobileNo: '',
-      address: '',
-      RoomNo: '',
-      status: '',
+          name: "",
+          email: "",
+          mobileNo: "",
+          address: "",
+          RoomNo: "",
+          status: "",
         });
       }
     } catch (error) {
-      console.error('Error adding buyer:', error);
-      toast.error(error.response?.data?.message || 'Failed to add buyer');
+      console.error("Error adding buyer:", error);
+      toast.error(error.response?.data?.message || "Failed to add buyer");
     }
   };
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -187,10 +189,11 @@ const BuyersTable = () => {
   const handleUpdate = async () => {
     handleCloseEditModal();
     // console.log("selected property ", selectedProperty);
-    
+
     try {
       const res = await axios.put(
-        `http://localhost:3001/buyer/updateBuyer/${selectedBuyer._id}`, editFormData
+        `http://localhost:3001/buyer/updateBuyer/${selectedBuyer._id}`,
+        editFormData
       );
       if (res.data.success) {
         toast.success(res.data.message);
@@ -228,16 +231,14 @@ const BuyersTable = () => {
   };
   return (
     <>
-    
-  
+    <div className="table">
       <div className="flex">
+
         <TextField
           className="search"
           label="Search"
           variant="outlined"
-          // fullWidth
-          //  value={searchQuery}
-          // onChange={handleSearchChange}
+          size="small"
           value={searchTerm}
           onChange={handleSearchChange}
           InputProps={{
@@ -247,35 +248,18 @@ const BuyersTable = () => {
               </InputAdornment>
             ),
           }}
-          style={{
-            marginBottom: "9px",
-            width: "160px",
-            display: "flex",
-            marginRight: "160px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
         />
 
         <Button
           variant="contained"
+          className="primary_button"
+          startIcon={<AddIcon />}
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "wrap",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            height: "55px",
-            width: "130px",
-            marginRight:"18px"
-
-          }}
         >
           Add Buyer
         </Button>
       </div>
-
+      <div className="table">
       <TableContainer
         component={Paper}
         style={{ overflowX: "auto", maxWidth: 1250 }}
@@ -291,28 +275,52 @@ const BuyersTable = () => {
             }}
           >
             <TableRow className="bg-gray-200">
-              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 SI No.
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 Name
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 E-mail
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 Mobile No
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 Address
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 Room No
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 Status
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
+              <TableCell
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                className="border p-2"
+              >
                 Action
               </TableCell>
             </TableRow>
@@ -395,8 +403,8 @@ const BuyersTable = () => {
                         textAlign: "center",
                       }}
                       className="border p-2"
-                    >{buyer.status}
-                      
+                    >
+                      {buyer.status}
                     </TableCell>
                     <TableCell
                       sx={{ fontWeight: "bolder" }}
@@ -417,7 +425,7 @@ const BuyersTable = () => {
                           <Visibility />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "green" }}
+                          sx={{ color: "gray" }}
                           onClick={() => handleEdit(buyer)}
                         >
                           <Edit />
@@ -469,31 +477,37 @@ const BuyersTable = () => {
             </Box>
             <Grid container spacing={2} mt={2}>
               {Object.keys(editFormData)
-              .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
-              .map((field) => (
-                <Grid item xs={6} key={field}>
-                  {field === "status" ? (
-                    <FormControl fullWidth variant="outlined">
-                      <InputLabel>Status</InputLabel>
-                      <Select
+                .filter(
+                  (field) =>
+                    field !== "createdAt" &&
+                    field !== "updatedAt" &&
+                    field !== "__v" &&
+                    field !== "_id"
+                )
+                .map((field) => (
+                  <Grid item xs={6} key={field}>
+                    {field === "status" ? (
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel>Status</InputLabel>
+                        <Select
+                          value={editFormData[field] || ""}
+                          onChange={handleEditInputChange(field)}
+                          label="Status"
+                        >
+                          <MenuItem value="Active">Active</MenuItem>
+                          <MenuItem value="Inactive">Inactive</MenuItem>
+                        </Select>
+                      </FormControl>
+                    ) : (
+                      <TextField
+                        label={field}
                         value={editFormData[field] || ""}
                         onChange={handleEditInputChange(field)}
-                        label="Status"
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Inactive">Inactive</MenuItem>
-                      </Select>
-                    </FormControl>
-                  ) : (
-                    <TextField
-                      label={field}
-                      value={editFormData[field] || ""}
-                      onChange={handleEditInputChange(field)}
-                      fullWidth
-                    />
-                  )}
-                </Grid>
-              ))}
+                        fullWidth
+                      />
+                    )}
+                  </Grid>
+                ))}
             </Grid>
             <Box display="flex" justifyContent="flex-end" mt={3}>
               <Button variant="outlined" onClick={handleCloseEditModal}>
@@ -516,10 +530,11 @@ const BuyersTable = () => {
               Are you sure you want to delete this buyer?
             </Typography>
             <Box display="flex" justifyContent="center" gap={2}>
-              <Button 
-                            sx={{backgroundColor:"gray",color:"white"}}
-
-              variant="outlined" onClick={handleCloseDeleteModal}>
+              <Button
+                sx={{ backgroundColor: "gray", color: "white" }}
+                variant="outlined"
+                onClick={handleCloseDeleteModal}
+              >
                 Cancel
               </Button>
               <Button
@@ -534,107 +549,111 @@ const BuyersTable = () => {
         </Modal>
 
         <Modal open={addModalOpen} onClose={handleCloseAddModal}>
-                <Box sx={modalStyle}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="h6" fontWeight="bold">Add New Buyer</Typography>
-                    <IconButton onClick={handleCloseAddModal}>
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Name"
-                        name="name"
-                        value={addFormData.name}
-                        onChange={handleAddInputChange('name')}
-                        required
-                      />
-                    </Grid>
-                   
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="E-mail"
-                        name="email"
-                        value={addFormData.email}
-                        onChange={handleAddInputChange('email')}
-                        required
-                      />
-                    </Grid>
-                   
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Mobile No"
-                        name="mobileNo"
-                        value={addFormData.mobileNo}
-                        onChange={handleAddInputChange('mobileNo')}
-                        required
-                      />
-                    </Grid>
-                   
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Address"
-                        name="address"
-                        value={addFormData.address}
-                        onChange={handleAddInputChange('address')}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Room No"
-                        name="RoomNo"
-                       // type="number"
-                        value={addFormData.RoomNo}
-                        onChange={handleAddInputChange('RoomNo')}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <InputLabel id="furnishing-label">Status</InputLabel>
-                        <Select
-                          labelId="furnishing-label"
-                          name="status"
-                           label="Status"
-                          value={addFormData.status}
-                          onChange={handleAddInputChange('status')}
-                          required
-                          
-                        >
-                           <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Inactive">Inactive</MenuItem>
-                       </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box display="flex" justifyContent="flex-end" gap={2}>
-                        <Button 
-                          variant="outlined" 
-                          onClick={handleCloseAddModal}
-                        >
-                          Cancel
-                        </Button>
-                        <Button 
-                          variant="contained" 
-                          color="primary"
-                          onClick={handleAddBuyer}
-                        >
-                          Save Buyer
-                        </Button>
-                      </Box>
-                    </Grid>
-                  </Grid>
+          <Box sx={modalStyle}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={2}
+            >
+              <Typography variant="h6" fontWeight="bold">
+                Add New Buyer
+              </Typography>
+              <IconButton onClick={handleCloseAddModal}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  value={addFormData.name}
+                  onChange={handleAddInputChange("name")}
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="E-mail"
+                  name="email"
+                  value={addFormData.email}
+                  onChange={handleAddInputChange("email")}
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Mobile No"
+                  name="mobileNo"
+                  value={addFormData.mobileNo}
+                  onChange={handleAddInputChange("mobileNo")}
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Address"
+                  name="address"
+                  value={addFormData.address}
+                  onChange={handleAddInputChange("address")}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Room No"
+                  name="RoomNo"
+                  // type="number"
+                  value={addFormData.RoomNo}
+                  onChange={handleAddInputChange("RoomNo")}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel id="furnishing-label">Status</InputLabel>
+                  <Select
+                    labelId="furnishing-label"
+                    name="status"
+                    label="Status"
+                    value={addFormData.status}
+                    onChange={handleAddInputChange("status")}
+                    required
+                  >
+                    <MenuItem value="Active">Active</MenuItem>
+                    <MenuItem value="Inactive">Inactive</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent="flex-end" gap={2}>
+                  <Button variant="outlined" onClick={handleCloseAddModal}>
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddBuyer}
+                  >
+                    Save Buyer
+                  </Button>
                 </Box>
-              </Modal>
-      
+              </Grid>
+            </Grid>
+          </Box>
+        </Modal>
       </TableContainer>
+      </div>
+      </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

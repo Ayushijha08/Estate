@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import TablePagination from "@mui/material/TablePagination";
+import AddIcon from "@mui/icons-material/Add";
 
 import {
   Table,
@@ -32,9 +33,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 const AgentTable = () => {
-  
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -225,16 +224,16 @@ const AgentTable = () => {
       toast.error(error.response.data.message);
     }
   };
-  
+
   return (
     <>
-
+    <div className="table">
       <div className="flex">
         <TextField
           className="search"
           label="Search"
           variant="outlined"
-          // fullWidth
+          size="small"
           value={searchTerm}
           onChange={handleSearchChange}
           InputProps={{
@@ -244,480 +243,467 @@ const AgentTable = () => {
               </InputAdornment>
             ),
           }}
-          style={{
-            marginBottom: "9px",
-            width: "160px",
-            display: "flex",
-            marginRight: "150px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
         />
-
         <Button
           variant="contained"
-          // color="primary"
+          className="primary_button"
+          startIcon={<AddIcon />}
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "wrap",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            height: "55px",
-            width: "130px",
-          }}
         >
           Add Agent
         </Button>
       </div>
       <div className="table">
-
-      <TableContainer
-        component={Paper}
-        style={{ overflowX: "auto", maxWidth: 1250 }}
-      >
-        <Table className="w-full border border-gray-300">
-          <TableHead
-            sx={{
-              top: 0,
-              background: "white",
-              zIndex: 2,
-              position: "sticky",
-              fontWeight: "bold",
-            }}
-          >
-            <TableRow className="bg-gray-200">
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                ID
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Name
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                E-mail
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Mobile No
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Address
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Lisence No
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Experience
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Commission Rate
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Status
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: "bold", textAlign: "center" }}
-                className="border p-2"
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {agents.length > 0 &&
-              agents
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((Agents, index) => (
-                  <TableRow
-                    key={Agents._id}
-                    className="text-center"
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
+        <TableContainer
+          component={Paper}
+          style={{ overflowX: "auto", maxWidth: 1250 }}
+        >
+          <Table className="w-full border border-gray-300">
+            <TableHead
+              sx={{
+                top: 0,
+                background: "white",
+                zIndex: 2,
+                position: "sticky",
+                fontWeight: "bold",
+              }}
+            >
+              <TableRow className="bg-gray-200">
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  ID
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Name
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  E-mail
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Mobile No
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Address
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Lisence No
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Experience
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Commission Rate
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                  className="border p-2"
+                >
+                  Action
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {agents.length > 0 &&
+                agents
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((Agents, index) => (
+                    <TableRow
+                      key={Agents._id}
+                      className="text-center"
+                      sx={{ fontWeight: "bold" }}
                     >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.name}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.email}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.mobileNo}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.address}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.licenseNo}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.experience}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.commissionRate}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: "4px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                      }}
-                      className="border p-2"
-                    >
-                      {Agents.status}
-                    </TableCell>
-                    <TableCell
-                      sx={{ fontWeight: "bolder" }}
-                      className="border p-2"
-                    >
-                      <TableContainer
-                        style={{
-                          display: "flex",
-                          gap: "5px",
-                          justifyContent: "center",
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
                         }}
+                        className="border p-2"
                       >
-                        <IconButton
-                          sx={{ color: "blue" }}
-                          fontweight="bolder"
-                          onClick={() => handleView(Agents)}
+                        {index + 1}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.name}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.email}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.mobileNo}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.address}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.licenseNo}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.experience}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.commissionRate}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "4px",
+                          fontSize: "12px",
+                          textAlign: "center",
+                        }}
+                        className="border p-2"
+                      >
+                        {Agents.status}
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bolder" }}
+                        className="border p-2"
+                      >
+                        <TableContainer
+                          style={{
+                            display: "flex",
+                            gap: "5px",
+                            justifyContent: "center",
+                          }}
                         >
-                          <Visibility />
-                        </IconButton>
-                        <IconButton
-                          sx={{ color: "green" }}
-                          onClick={() => handleEdit(Agents)}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton
-                          sx={{ color: "red" }}
-                          onClick={() => handleDelete(Agents)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </TableContainer>
-                    </TableCell>
-                  </TableRow>
-                ))}
-          </TableBody>
-        </Table>
+                          <IconButton
+                            sx={{ color: "blue" }}
+                            fontweight="bolder"
+                            onClick={() => handleView(Agents)}
+                          >
+                            <Visibility />
+                          </IconButton>
+                          <IconButton
+                            sx={{ color: "gray" }}
+                            onClick={() => handleEdit(Agents)}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            sx={{ color: "red" }}
+                            onClick={() => handleDelete(Agents)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableContainer>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
 
-        {/* View Modal */}
-        <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
-          <Box sx={modalStyle}>
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="h6">Agents Details</Typography>
-              <IconButton onClick={handleCloseViewModal}>
-                <CloseIcon />
-              </IconButton>
+          {/* View Modal */}
+          <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
+            <Box sx={modalStyle}>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">Agents Details</Typography>
+                <IconButton onClick={handleCloseViewModal}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              {selectedAgents && (
+                <Grid container spacing={2} mt={2}>
+                  {Object.entries(selectedAgents).map(([key, value]) => (
+                    <Grid item xs={6} key={key}>
+                      <Typography>
+                        <strong>{key}:</strong> {value}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
             </Box>
-            {selectedAgents && (
+          </Modal>
+
+          {/* Edit Modal */}
+          <Modal open={editModalOpen} onClose={handleCloseEditModal}>
+            <Box sx={modalStyle}>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">Edit Agents</Typography>
+                <IconButton onClick={handleCloseEditModal}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
               <Grid container spacing={2} mt={2}>
-                {Object.entries(selectedAgents).map(([key, value]) => (
-                  <Grid item xs={6} key={key}>
-                    <Typography>
-                      <strong>{key}:</strong> {value}
-                    </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            )}
-          </Box>
-        </Modal>
+                {Object.keys(editFormData)
+                  .filter(
+                    (field) =>
+                      field !== "createdAt" &&
+                      field !== "updatedAt" &&
+                      field !== "__v" &&
+                      field !== "_id"
+                  )
 
-        {/* Edit Modal */}
-        <Modal open={editModalOpen} onClose={handleCloseEditModal}>
-          <Box sx={modalStyle}>
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="h6">Edit Agents</Typography>
-              <IconButton onClick={handleCloseEditModal}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-            <Grid container spacing={2} mt={2}>
-              {Object.keys(editFormData)
-                .filter(
-                  (field) =>
-                    field !== "createdAt" &&
-                    field !== "updatedAt" &&
-                    field !== "__v" &&
-                    field !== "_id"
-                )
-
-                .map((field) => (
-                  <Grid item xs={6} key={field}>
-                    {field === "status" ? (
-                      <FormControl fullWidth>
-                        <InputLabel>Status</InputLabel>
-                        <Select
+                  .map((field) => (
+                    <Grid item xs={6} key={field}>
+                      {field === "status" ? (
+                        <FormControl fullWidth>
+                          <InputLabel>Status</InputLabel>
+                          <Select
+                            value={editFormData[field] || ""}
+                            onChange={handleEditInputChange(field)}
+                            label="Status"
+                          >
+                            <MenuItem value="Active">Active</MenuItem>
+                            <MenuItem value="InActive">InActive</MenuItem>
+                          </Select>
+                        </FormControl>
+                      ) : (
+                        <TextField
+                          label={field}
                           value={editFormData[field] || ""}
                           onChange={handleEditInputChange(field)}
-                          label="Status"
-                        >
-                          <MenuItem value="Active">Active</MenuItem>
-                          <MenuItem value="InActive">InActive</MenuItem>
-                        </Select>
-                      </FormControl>
-                    ) : (
-                      <TextField
-                        label={field}
-                        value={editFormData[field] || ""}
-                        onChange={handleEditInputChange(field)}
-                        fullWidth
-                      />
-                    )}
-                  </Grid>
-                ))}
-            </Grid>
-            <Box display="flex" justifyContent="flex-end" mt={3}>
-              <Button variant="outlined" onClick={handleCloseEditModal}>
-                Cancel
-              </Button>
-              <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
-                Update
-              </Button>
+                          fullWidth
+                        />
+                      )}
+                    </Grid>
+                  ))}
+              </Grid>
+              <Box display="flex" justifyContent="flex-end" mt={3}>
+                <Button variant="outlined" onClick={handleCloseEditModal}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleUpdate}
+                  sx={{ ml: 2 }}
+                >
+                  Update
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Modal>
+          </Modal>
 
-        {/* Delete Modal */}
-        <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
-          <Box sx={deleteModalStyle}>
-            <Typography className="confirm_delete" variant="h6">
-              Confirm Delete
-            </Typography>
-            <Typography my={2}>
-              Are you sure you want to delete this Agents?
-            </Typography>
-            <Box display="flex" justifyContent="center" gap={2}>
-              <Button
-                sx={{ backgroundColor: "gray", color: "white" }}
-                variant="outlined"
-                onClick={handleCloseDeleteModal}
-              >
-                CANCEL
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={handleConfirmDelete}
-              >
-                DELETE
-              </Button>
-            </Box>
-          </Box>
-        </Modal>
-        <Modal open={addModalOpen} onClose={handleCloseAddModal}>
-          <Box sx={modalStyle}>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={2}
-            >
-              <Typography variant="h6" fontWeight="bold">
-                Add New Buyer
+          {/* Delete Modal */}
+          <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
+            <Box sx={deleteModalStyle}>
+              <Typography className="confirm_delete" variant="h6">
+                Confirm Delete
               </Typography>
-              <IconButton onClick={handleCloseAddModal}>
-                <CloseIcon />
-              </IconButton>
+              <Typography my={2}>
+                Are you sure you want to delete this Agents?
+              </Typography>
+              <Box display="flex" justifyContent="center" gap={2}>
+                <Button
+                  sx={{ backgroundColor: "gray", color: "white" }}
+                  variant="outlined"
+                  onClick={handleCloseDeleteModal}
+                >
+                  CANCEL
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleConfirmDelete}
+                >
+                  DELETE
+                </Button>
+              </Box>
             </Box>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Name"
-                  name="name"
-                  value={addFormData.name}
-                  onChange={handleAddInputChange("name")}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="E-mail"
-                  name="email"
-                  value={addFormData.email}
-                  onChange={handleAddInputChange("email")}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Mobile No"
-                  name="mobileNo"
-                  value={addFormData.mobileNo}
-                  onChange={handleAddInputChange("mobileNo")}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Address"
-                  name="address"
-                  value={addFormData.address}
-                  onChange={handleAddInputChange("address")}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="license No"
-                  name="licenseNo"
-                  // type="number"
-                  value={addFormData.licenseNo}
-                  onChange={handleAddInputChange("licenseNo")}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="experience"
-                  name="experience"
-                  // type="number"
-                  value={addFormData.experience}
-                  onChange={handleAddInputChange("experience")}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="commission Rate"
-                  name="commissionRate"
-                  // type="number"
-                  value={addFormData.commissionRate}
-                  onChange={handleAddInputChange("commissionRate")}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="furnishing-label">Status</InputLabel>
-                  <Select
-                    labelId="furnishing-label"
-                    name="status"
-                    value={addFormData.status}
-                    onChange={handleAddInputChange("status")}
+          </Modal>
+          <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+            <Box sx={modalStyle}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={2}
+              >
+                <Typography variant="h6" fontWeight="bold">
+                  Add New Buyer
+                </Typography>
+                <IconButton onClick={handleCloseAddModal}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Name"
+                    name="name"
+                    value={addFormData.name}
+                    onChange={handleAddInputChange("name")}
                     required
-                  >
-                    <MenuItem value="Active">Active</MenuItem>
-                    <MenuItem value="Inactive">Inactive</MenuItem>
-                  </Select>
-                </FormControl>
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="E-mail"
+                    name="email"
+                    value={addFormData.email}
+                    onChange={handleAddInputChange("email")}
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Mobile No"
+                    name="mobileNo"
+                    value={addFormData.mobileNo}
+                    onChange={handleAddInputChange("mobileNo")}
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Address"
+                    name="address"
+                    value={addFormData.address}
+                    onChange={handleAddInputChange("address")}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="license No"
+                    name="licenseNo"
+                    // type="number"
+                    value={addFormData.licenseNo}
+                    onChange={handleAddInputChange("licenseNo")}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="experience"
+                    name="experience"
+                    // type="number"
+                    value={addFormData.experience}
+                    onChange={handleAddInputChange("experience")}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="commission Rate"
+                    name="commissionRate"
+                    // type="number"
+                    value={addFormData.commissionRate}
+                    onChange={handleAddInputChange("commissionRate")}
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id="furnishing-label">Status</InputLabel>
+                    <Select
+                      labelId="furnishing-label"
+                      name="status"
+                      value={addFormData.status}
+                      onChange={handleAddInputChange("status")}
+                      required
+                    >
+                      <MenuItem value="Active">Active</MenuItem>
+                      <MenuItem value="Inactive">Inactive</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box display="flex" justifyContent="flex-end" gap={2}>
+                    <Button variant="outlined" onClick={handleCloseAddModal}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleAddAgent}
+                    >
+                      Save Agent
+                    </Button>
+                  </Box>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <Box display="flex" justifyContent="flex-end" gap={2}>
-                  <Button variant="outlined" onClick={handleCloseAddModal}>
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddAgent}
-                  >
-                    Save Agent
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Modal>
-      </TableContainer>
+            </Box>
+          </Modal>
+        </TableContainer>
+      </div>
       </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

@@ -214,11 +214,13 @@ const ProjectTable = () => {
 
   return (
     <>
+    <div className="table">
       <div className="flex">
         <TextField
           className="search"
           label="Search"
           variant="outlined"
+                    size="small"
           value={searchTerm}
           onChange={handleSearchChange}
           InputProps={{
@@ -228,34 +230,17 @@ const ProjectTable = () => {
               </InputAdornment>
             ),
           }}
-          style={{
-           marginBottom: "9px",
-          // marginTop:"10px",
-            width: "160px",
-            display: "flex",
-            marginRight: "160px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
+     
         />
 
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          // color="primary"
+         
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "nowrap",
-            display: "flex",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            height: "55px",
-            width: "130px",
-            marginRight:"18px"
+          className="primary_button"
 
-          }}
+          
         >
           Add project
         </Button>
@@ -266,7 +251,9 @@ const ProjectTable = () => {
         component={Paper}
         style={{ overflowX: "auto", maxWidth: 1250 ,marginTop:"0"}}
       >
-        <Table className="w-full border border-gray-300">
+        <Table 
+        sx={{whiteSpace:"nowrap"}}
+        className="w-full border border-gray-300">
           <TableHead
             sx={{
               top: 0,
@@ -410,7 +397,7 @@ const ProjectTable = () => {
                           <Visibility />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "green" }}
+                          sx={{ color: "gray" }}
                           onClick={() => handleEdit(project)}
                         >
                           <Edit />
@@ -496,10 +483,12 @@ const ProjectTable = () => {
               ))}
             </Grid>
             <Box display="flex" justifyContent="flex-end" mt={3}>
-              <Button variant="outlined" onClick={handleCloseEditModal}>
+              <Button 
+              sx={{backgroundColor:"rgb(128,128,128)",color:"rgb(248,248,255)"}}
+              variant="Standard" onClick={handleCloseEditModal}>
                 Cancel
               </Button>
-              <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+              <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 ,backgroundColor:"rgb(4,4,44)"}}>
                 Update
               </Button>
             </Box>
@@ -571,7 +560,12 @@ const ProjectTable = () => {
                         type="Date"
                         value={addFormData.StartDate}
                         onChange={handleAddInputChange('StartDate')}
+
                         required
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -583,6 +577,9 @@ const ProjectTable = () => {
                         value={addFormData.EndDate}
                         onChange={handleAddInputChange('EndDate')}
                         required
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -617,12 +614,14 @@ const ProjectTable = () => {
                     <Grid item xs={12}>
                       <Box display="flex" justifyContent="flex-end" gap={2}>
                         <Button 
-                          variant="outlined" 
+                          variant="Standard" 
                           onClick={handleCloseAddModal}
+                          sx={{backgroundColor:"rgb(128,128,128)",color:"rgb(248,248,255)"}}
                         >
                           Cancel
                         </Button>
                         <Button 
+                        sx={{backgroundColor:"rgb(4,4,44)"}}
                           variant="contained" 
                           color="primary"
                           onClick={handleAddproject}
@@ -636,6 +635,7 @@ const ProjectTable = () => {
               </Modal>
         
       </TableContainer>
+      </div>
       </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

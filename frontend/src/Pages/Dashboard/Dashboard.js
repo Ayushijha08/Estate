@@ -1,10 +1,13 @@
-import React from "react";
+import React from 'react';
+import Charts from './Charts';
 
-const Dashboard=()=>
-{
-    return (
-        <></>
-    )
-}
+const Dashboard = () => {
+  return (
+    <div
+    style={{overflowY:"auto",scrollbarWidth:"none"}} className="p-4">
+      <Charts />
+    </div>
+  );
+};
 
 export default Dashboard;

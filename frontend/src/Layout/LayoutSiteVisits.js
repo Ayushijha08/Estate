@@ -13,7 +13,8 @@ const LayoutSiteVisits=()=>
         <div className="main-container">
             <Sidebar/>
             <div className="content">
-            <Header className="header" />
+            <Header
+            className="header"/>
         
         <SiteVisits/>
             

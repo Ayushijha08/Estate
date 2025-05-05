@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+
 import TablePagination from "@mui/material/TablePagination";
 
 import {
@@ -238,6 +240,7 @@ const LeaseTable = () => {
   };
   return (
     <>
+    <div className="table">
       <div className="flex">
         <TextField
         size="small"
@@ -246,9 +249,6 @@ const LeaseTable = () => {
           variant="outlined"
           value={searchTerm}
           onChange={handleSearchChange}
-          // fullWidth
-          //  value={searchQuery}
-          // onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -256,31 +256,13 @@ const LeaseTable = () => {
               </InputAdornment>
             ),
           }}
-          style={{
-            marginBottom: "9px",
-            width: "160px",
-            display: "flex",
-            marginRight: "160px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
         />
 
         <Button
           variant="contained"
-          // color="primary"
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "wrap",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-           // height: "55px",
-            width: "130px",
-            marginRight:"18px"
-
-          }}
+          startIcon={<AddIcon />}
+          className="primary_button"
         >
           Add Lease
         </Button>
@@ -503,7 +485,7 @@ const LeaseTable = () => {
                           <Visibility />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "green" }}
+                          sx={{ color: "gray" }}
                           onClick={() => handleEdit(lease)}
                         >
                           <Edit />
@@ -808,6 +790,7 @@ const LeaseTable = () => {
             </Box>
           </Modal>
         </TableContainer>
+      </div>
       </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

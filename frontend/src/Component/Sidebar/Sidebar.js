@@ -20,8 +20,8 @@ const Sidebar=()=>
               src={"/logo.png"} 
               alt="logo"
               className="logos"
-              width={210} 
-              height={85} 
+              width={180} 
+              height={65} 
              // style={{background:"black"}}
 
             />

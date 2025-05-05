@@ -228,49 +228,30 @@ const SellersTable = () => {
 
   return (
     <>
-
+<div className="table">
       <div className="flex">
         <TextField
           className="search"
           label="Search"
           variant="outlined"
-          // fullWidth
           value={searchTerm}
           onChange={handleSearchChange}
-          //  value={searchQuery}
-          // onChange={handleSearchChange}
+                    size="small"
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="end">
                 <SearchIcon />
               </InputAdornment>
             ),
           }}
-          style={{
-            marginBottom: "9px",
-            width: "160px",
-            display: "flex",
-            marginRight: "160px",
-            justifyContent: "flex-end",
-            marginLeft: "800px",
-          }}
+       
         />
 
         <Button
           variant="contained"
           // color="primary"
           onClick={handleAddNew}
-          style={{
-            marginBottom: "8px",
-            textWrap: "wrap",
-            marginLeft: "40px",
-            padding: "10px",
-            borderRadius: "5px",
-            marginRight:"17px",
-
-            height: "55px",
-            width: "130px",
-          }}
+         className="primary_button"
         >
           Add sellers
         </Button>
@@ -458,7 +439,7 @@ const SellersTable = () => {
                           <Visibility />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "green" }}
+                          sx={{ color: "gray" }}
                           onClick={() => handleEdit(sellers)}
                         >
                           <Edit />
@@ -534,6 +515,7 @@ const SellersTable = () => {
                     ) : field === "name" ? (
                       <TextField
                         label="Name"
+                        type="string"
                         value={editFormData[field] || ""}
                         onChange={handleEditInputChange(field)}
                         fullWidth
@@ -664,6 +646,7 @@ const SellersTable = () => {
                   fullWidth
                   label="Name"
                   name="name"
+                  type="string"
                   value={addFormData.name}
                   onChange={handleAddInputChange("name")}
                   required
@@ -787,6 +770,7 @@ const SellersTable = () => {
           </Box>
         </Modal>
       </TableContainer>
+      </div>
       </div>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

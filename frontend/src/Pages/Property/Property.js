@@ -247,7 +247,7 @@ const PropertyTable = () => {
           Add Property
         </Button>
       </div>
-<div className="table">
+<div className="table1">
       <TableContainer
         component={Paper}
         className="pink"

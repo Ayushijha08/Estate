@@ -73,7 +73,7 @@ const AgentTable = () => {
     licenseNo: "",
     experience: "",
     commissionRate: "",
-    status: "Active",
+    status: "",
   });
 
   const [apiAgents, setApiAgents] = useState([]);
@@ -147,7 +147,7 @@ const AgentTable = () => {
           licenseNo: "",
           experience: "",
           commissionRate: "",
-          status: "Active",
+          status: "",
         });
       }
     } catch (error) {
